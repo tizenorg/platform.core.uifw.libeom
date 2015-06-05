@@ -980,6 +980,7 @@ eom_unset_attribute_changed_cb (eom_attribute_changed_cb callback)
 API int
 eom_set_output_attribute (eom_output_id output_id, eom_output_attribute_e attr)
 {
+    eom_output_info *output_info = NULL;
     bool ret = false;
     GValueArray *msg_array;
     GValueArray *ret_array;
@@ -991,6 +992,14 @@ eom_set_output_attribute (eom_output_id output_id, eom_output_attribute_e attr)
     RETV_IF_FAIL (attr < EOM_OUTPUT_ATTRIBUTE_MAX, EOM_ERROR_INVALID_PARAMETER);
 
     _eom_mutex_lock ();
+
+    output_info = _eom_find_output_info (output_id);
+    if (!output_info)
+    {
+        set_last_result (EOM_ERROR_NO_SUCH_DEVICE);
+        _eom_mutex_unlock ();
+        return EOM_ERROR_NO_SUCH_DEVICE;
+    }
 
     pid = getpid();
 
@@ -1194,6 +1203,8 @@ eom_get_output_physical_size (eom_output_id output_id, int *phy_width, int *phy_
 API int
 eom_set_output_window (eom_output_id output_id, Evas_Object *win)
 {
+#ifdef HAVE_X11
+    eom_output_info *output_info = NULL;
     bool ret = false;
     GValueArray *msg_array;
     GValueArray *ret_array;
@@ -1205,6 +1216,14 @@ eom_set_output_window (eom_output_id output_id, Evas_Object *win)
     RETV_IF_FAIL (win != NULL, EOM_ERROR_INVALID_PARAMETER);
 
     _eom_mutex_lock ();
+
+    output_info = _eom_find_output_info (output_id);
+    if (!output_info)
+    {
+        set_last_result (EOM_ERROR_NO_SUCH_DEVICE);
+        _eom_mutex_unlock ();
+        return EOM_ERROR_NO_SUCH_DEVICE;
+    }
 
     pid = getpid();
     xwin = elm_win_xwindow_get (win);
@@ -1244,10 +1263,11 @@ eom_set_output_window (eom_output_id output_id, Evas_Object *win)
         return EOM_ERROR_NONE;
     }
 
-
     INFO ("SetWindow: failed\n");
     _eom_mutex_unlock ();
-
     return EOM_ERROR_MESSAGE_OPERATION_FAILURE;
+#else
+    return EOM_ERROR_NONE;
+#endif
 }
 

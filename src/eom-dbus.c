@@ -90,7 +90,7 @@ _eom_dbus_convert_gvalue_to_message (GValueArray *array, DBusMessage *msg)
         GValue *v = g_value_array_get_nth (array, i);
         GType type = v->g_type;
 
-        INFO ("[EOM_CLIENT:%s] type(%d)", client_info.name, type);
+        INFO ("[EOM_CLIENT:%s] type(%d)", client_info.name, (int)type);
 
         switch (type)
         {

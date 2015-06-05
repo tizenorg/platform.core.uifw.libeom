@@ -466,6 +466,7 @@ int eom_get_output_physical_size (eom_output_id output_id, int *phy_width, int *
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #EOM_ERROR_NO_SUCH_DEVICE Invalid external output instance
  * @retval #EOM_ERROR_MESSAGE_SENDING_FAILURE Communication failure with EOM module
  * @retval #EOM_ERROR_MESSAGE_OPERATION_FAILURE Operation failure
  * @pre eom_init()
@@ -483,6 +484,7 @@ int eom_set_output_attribute (eom_output_id output_id, eom_output_attribute_e at
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #EOM_ERROR_NO_SUCH_DEVICE Invalid external output instance
  * @retval #EOM_ERROR_MESSAGE_SENDING_FAILURE Communication failure with EOM module
  * @retval #EOM_ERROR_MESSAGE_OPERATION_FAILURE Operation failure
  * @pre eom_init()

@@ -1,3 +1,6 @@
+%bcond_with x
+%bcond_with wayland
+
 Name: libeom
 Summary: External Output Manager Library
 Version: 1.0.0
@@ -7,6 +10,10 @@ License: MIT
 Source0: %{name}-%{version}.tar.gz
 Source1001: 	libeom.manifest
 
+%if %{with wayland}
+BuildRequires:  pkgconfig(wayland-client)
+%else
+%endif
 BuildRequires:  pkgconfig(dlog)
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(gio-unix-2.0)
@@ -32,7 +39,12 @@ cp %{SOURCE1001} .
 %build
 export CFLAGS="-g -O0 -Wall -Werror -Wno-error=deprecated-declarations"
 export LDFLAGS="$LDFLAGS -Wl,--hash-style=both -Wl,--as-needed"
-%reconfigure --disable-dlog --disable-static
+%if %{with wayland}
+%reconfigure --disable-dlog --disable-static --with-eom-platform=WAYLAND
+%else
+%reconfigure --disable-dlog --disable-static --with-eom-platform=X11
+%endif
+
 make %{?_smp_mflags}
 
 %install

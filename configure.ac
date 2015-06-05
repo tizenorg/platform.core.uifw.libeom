@@ -50,6 +50,13 @@ AC_FUNC_ALLOCA
 # Enable quiet compiles on automake 1.11.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
+# set the window system platform where the bufmgr initializes
+AC_ARG_WITH(eom-platform, AS_HELP_STRING([--with-eom-platform=WINSYS], [eom platform (default: X11)]),
+				[ EOM_PLATFORM="$withval" ],
+				[ EOM_PLATFORM="X11" ])
+AC_SUBST(EOM_PLATFORM)
+
+
 # Checks for pkg-config packages
 PKG_CHECK_MODULES(DBUS, dbus-1)
 PKG_CHECK_MODULES(GLIB, glib-2.0 gobject-2.0)
@@ -57,6 +64,23 @@ PKG_CHECK_MODULES(ELEMENTARY, elementary)
 
 LIBEOM_CFLAGS="$DBUS_CFLAGS $GLIB_CFLAGS $ELEMENTARY_CFLAGS"
 LIBEOM_LIBS="$DBUS_LIBS $GLIB_LIBS $ELEMENTARY_LIBS"
+
+if test "x$EOM_PLATFORM" = "xX11"; then
+    LIBEOM_CFLAGS="$LIBEOM_CLAGS "
+    LIBEOM_LIBS="$LIBEOM_LIBS "
+fi
+
+if test "x$EOM_PLATFORM" = "xWAYLAND"; then
+    PKG_CHECK_MODULES(WAYLAND_CLIENT, wayland-client)
+    LIBEOM_CFLAGS="$LIBEOM_CFLAGS $WAYLAND_CLIENT_CFLAGS"
+    LIBEOM_LIBS="$LIBEOM_LIBS $WAYLAND_CLIENT_LIBS"
+
+	WAYLAND_PREFIX=`$PKG_CONFIG --variable=prefix wayland-client`
+    AC_PATH_PROG([WAYLAND_SCANNER], [wayland-scanner],,
+		    [${WAYLAND_PREFIX}/bin$PATH_SEPARATOR$PATH])
+fi
+
+
 
 PKG_CHECK_MODULES(CAPI, [capi-base-common >= 0.1.1], [CAPI_VER="yes"], [CAPI_VER="no"])
 if test "x$CAPI_VER" = "xyes"; then
@@ -75,6 +99,15 @@ fi
 
 AC_SUBST([LIBEOM_CFLAGS])
 AC_SUBST([LIBEOM_LIBS])
+
+if test "x$EOM_PLATFORM" = "xX11"; then
+	AC_DEFINE(HAVE_X11,1,[The window system is X11.])
+else
+	AC_DEFINE(HAVE_WAYLAND,1,[The window system is WAYLAND.])
+fi
+
+AM_CONDITIONAL(HAVE_EOM_PLATFORM_X11, test "x$EOM_PLATFORM" = "xX11")
+AM_CONDITIONAL(HAVE_EOM_PLATFORM_WAYLAND, test "x$EOM_PLATFORM" = "xWAYLAND")
 
 # Checks for header files.
 AC_HEADER_STDC
