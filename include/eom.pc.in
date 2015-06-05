@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: eom
+Description: The External Output Manager debug Library
+Version: @PACKAGE_VERSION@
+Requires.private: dbus-1 gio-unix-2.0
+Requires: capi-base-common
+Cflags: -I${includedir}/eom
+Libs: -L${libdir} -leom
