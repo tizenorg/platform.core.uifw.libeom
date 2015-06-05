@@ -16,6 +16,7 @@ BuildRequires:  pkgconfig(wayland-client)
 %endif
 BuildRequires:  pkgconfig(dlog)
 BuildRequires:  pkgconfig(dbus-1)
+BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(gio-unix-2.0)
 BuildRequires:  pkgconfig(capi-base-common)
 BuildRequires:  pkgconfig(elementary)
