@@ -61,79 +61,74 @@ extern "C" {
  * @brief Enumeration of External Output Manager (EOM) error type
  * @since_tizen 2.4
  */
-typedef enum
-{
-    EOM_ERROR_NONE = TIZEN_ERROR_NONE,                             /**< Success */
-    EOM_ERROR_OUT_OF_MEMORY = TIZEN_ERROR_OUT_OF_MEMORY,           /**< Memory allocation failure */
-    EOM_ERROR_INVALID_PARAMETER = TIZEN_ERROR_INVALID_PARAMETER,   /**< Invalid input parameter */
-    EOM_ERROR_NO_SUCH_DEVICE = TIZEN_ERROR_NO_SUCH_DEVICE,         /**< Invalid external output instance */
-    EOM_ERROR_CONNECTION_FAILURE = TIZEN_ERROR_EOM | 0x01,         /**< Connection failure */
-    EOM_ERROR_MESSAGE_SENDING_FAILURE = TIZEN_ERROR_EOM | 0x02,    /**< Message sending failure */
-    EOM_ERROR_MESSAGE_OPERATION_FAILURE = TIZEN_ERROR_EOM | 0x03,  /**< Message operation failure */
+typedef enum {
+	EOM_ERROR_NONE = TIZEN_ERROR_NONE,                            /**< Success */
+	EOM_ERROR_OUT_OF_MEMORY = TIZEN_ERROR_OUT_OF_MEMORY,          /**< Memory allocation failure */
+	EOM_ERROR_INVALID_PARAMETER = TIZEN_ERROR_INVALID_PARAMETER,  /**< Invalid input parameter */
+	EOM_ERROR_NO_SUCH_DEVICE = TIZEN_ERROR_NO_SUCH_DEVICE,        /**< Invalid external output instance */
+	EOM_ERROR_CONNECTION_FAILURE = TIZEN_ERROR_EOM | 0x01,        /**< Connection failure */
+	EOM_ERROR_MESSAGE_SENDING_FAILURE = TIZEN_ERROR_EOM | 0x02,   /**< Message sending failure */
+	EOM_ERROR_MESSAGE_OPERATION_FAILURE = TIZEN_ERROR_EOM | 0x03, /**< Message operation failure */
 } eom_error_e;
 
 /**
  * @brief Enumeration of external output type
  * @since_tizen 2.4
  */
-typedef enum
-{
-    EOM_OUTPUT_TYPE_UNKNOWN,        /**< Unknown output type */
-    EOM_OUTPUT_TYPE_VGA,            /**< VGA output */
-    EOM_OUTPUT_TYPE_DVII,           /**< DVII output type */
-    EOM_OUTPUT_TYPE_DVID,           /**< DVID output type */
-    EOM_OUTPUT_TYPE_DVIA,           /**< DVIA output type */
-    EOM_OUTPUT_TYPE_COMPOSITE,      /**< Composite output type */
-    EOM_OUTPUT_TYPE_SVIDEO,         /**< SVIDEO output type */
-    EOM_OUTPUT_TYPE_LVDS,           /**< LVDS output type */
-    EOM_OUTPUT_TYPE_COMPONENT,      /**< Component output type */
-    EOM_OUTPUT_TYPE_9PINDIN,        /**< 9PinDIN output type */
-    EOM_OUTPUT_TYPE_DISPLAYPORT,    /**< DisplayPort output type */
-    EOM_OUTPUT_TYPE_HDMIA,          /**< HDMIA output type */
-    EOM_OUTPUT_TYPE_HDMIB,          /**< HDMIB output type */
-    EOM_OUTPUT_TYPE_TV,             /**< TV output type */
-    EOM_OUTPUT_TYPE_EDP,            /**< EDP output type */
-    EOM_OUTPUT_TYPE_VIRTUAL,        /**< VIRTUAL output type */
-    EOM_OUTPUT_TYPE_DSI,            /**< DSI output type */
-    EOM_OUTPUT_TYPE_MAX,
+typedef enum {
+	EOM_OUTPUT_TYPE_UNKNOWN,      /**< Unknown output type */
+	EOM_OUTPUT_TYPE_VGA,          /**< VGA output */
+	EOM_OUTPUT_TYPE_DVII,         /**< DVII output type */
+	EOM_OUTPUT_TYPE_DVID,         /**< DVID output type */
+	EOM_OUTPUT_TYPE_DVIA,         /**< DVIA output type */
+	EOM_OUTPUT_TYPE_COMPOSITE,    /**< Composite output type */
+	EOM_OUTPUT_TYPE_SVIDEO,       /**< SVIDEO output type */
+	EOM_OUTPUT_TYPE_LVDS,         /**< LVDS output type */
+	EOM_OUTPUT_TYPE_COMPONENT,    /**< Component output type */
+	EOM_OUTPUT_TYPE_9PINDIN,      /**< 9PinDIN output type */
+	EOM_OUTPUT_TYPE_DISPLAYPORT,  /**< DisplayPort output type */
+	EOM_OUTPUT_TYPE_HDMIA,        /**< HDMIA output type */
+	EOM_OUTPUT_TYPE_HDMIB,        /**< HDMIB output type */
+	EOM_OUTPUT_TYPE_TV,           /**< TV output type */
+	EOM_OUTPUT_TYPE_EDP,          /**< EDP output type */
+	EOM_OUTPUT_TYPE_VIRTUAL,      /**< VIRTUAL output type */
+	EOM_OUTPUT_TYPE_DSI,          /**< DSI output type */
+	EOM_OUTPUT_TYPE_MAX,
 } eom_output_type_e;
 
 /**
  * @brief Enumeration of external output mode
  * @since_tizen 2.4
  */
-typedef enum
-{
-    EOM_OUTPUT_MODE_NONE,          /**< None */
-    EOM_OUTPUT_MODE_MIRROR,        /**< Mirror mode */
-    EOM_OUTPUT_MODE_PRESENTATION,  /**< Presentation mode */
-    EOM_OUTPUT_MODE_MAX,
+typedef enum {
+	EOM_OUTPUT_MODE_NONE,          /**< None */
+	EOM_OUTPUT_MODE_MIRROR,        /**< Mirror mode */
+	EOM_OUTPUT_MODE_PRESENTATION,  /**< Presentation mode */
+	EOM_OUTPUT_MODE_MAX,
 } eom_output_mode_e;
 
 /**
  * @brief Enumeration of External Output Manager (EOM) attributes
  * @since_tizen 2.4
  */
-typedef enum
-{
-    EOM_OUTPUT_ATTRIBUTE_NONE,              /**< None */
-    EOM_OUTPUT_ATTRIBUTE_NORMAL,            /**< Normal presentation mode window showing on external output */
-    EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE_SHARE,   /**< Exclusive share presentation mode window showing on external output */
-    EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE,         /**< Exclusive presentation mode window showing on external output */
-    EOM_OUTPUT_ATTRIBUTE_MAX,
+typedef enum {
+	EOM_OUTPUT_ATTRIBUTE_NONE,             /**< None */
+	EOM_OUTPUT_ATTRIBUTE_NORMAL,           /**< Normal presentation mode window showing on external output */
+	EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE_SHARE,  /**< Exclusive share presentation mode window showing on external output */
+	EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE,        /**< Exclusive presentation mode window showing on external output */
+	EOM_OUTPUT_ATTRIBUTE_MAX,
 } eom_output_attribute_e;
 
 /**
  * @brief Enumeration of External Output Manager (EOM) attribute state
  * @since_tizen 2.4
  */
-typedef enum
-{
-    EOM_OUTPUT_ATTRIBUTE_STATE_NONE,        /**< None */
-    EOM_OUTPUT_ATTRIBUTE_STATE_ACTIVE,      /**< Output attribute is active */
-    EOM_OUTPUT_ATTRIBUTE_STATE_INACTIVE,    /**< Output attribute is inactive */
-    EOM_OUTPUT_ATTRIBUTE_STATE_LOST,        /**< Cannot use external output */
-    EOM_OUTPUT_ATTRIBUTE_STATE_MAX,
+typedef enum {
+	EOM_OUTPUT_ATTRIBUTE_STATE_NONE,      /**< None */
+	EOM_OUTPUT_ATTRIBUTE_STATE_ACTIVE,    /**< Output attribute is active */
+	EOM_OUTPUT_ATTRIBUTE_STATE_INACTIVE,  /**< Output attribute is inactive */
+	EOM_OUTPUT_ATTRIBUTE_STATE_LOST,      /**< Cannot use external output */
+	EOM_OUTPUT_ATTRIBUTE_STATE_MAX,
 } eom_output_attribute_state_e;
 
 /**
@@ -193,7 +188,7 @@ typedef void (*eom_attribute_changed_cb)(eom_output_id output_id, void *user_dat
  * @see eom_deinit()
  * @see #eom_error_e
  */
-int eom_init (void);
+int eom_init(void);
 
 /**
  * @brief Finalizes External Output Manager (EOM).
@@ -201,7 +196,7 @@ int eom_init (void);
  * @since_tizen 2.4
  * @see eom_init()
  */
-void eom_deinit (void);
+void eom_deinit(void);
 
 /**
  * @brief Registers a callback function to get output connection notification from External Output Manager (EOM) module.
@@ -217,7 +212,7 @@ void eom_deinit (void);
  * @see eom_unset_output_added_cb()
  * @see #eom_output_added_cb
  */
-int eom_set_output_added_cb (eom_output_added_cb callback, void *user_data);
+int eom_set_output_added_cb(eom_output_added_cb callback, void *user_data);
 
 /**
  * @brief Unregisters the callback function.
@@ -231,7 +226,7 @@ int eom_set_output_added_cb (eom_output_added_cb callback, void *user_data);
  * @see eom_set_output_added_cb()
  * @see #eom_output_added_cb
  */
-int eom_unset_output_added_cb (eom_output_added_cb callback);
+int eom_unset_output_added_cb(eom_output_added_cb callback);
 
 /**
  * @brief Registers a callback function to get output disconnection notification from External Output Manager (EOM) module.
@@ -247,7 +242,7 @@ int eom_unset_output_added_cb (eom_output_added_cb callback);
  * @see eom_unset_output_removed_cb()
  * @see #eom_output_removed_cb
  */
-int eom_set_output_removed_cb (eom_output_removed_cb callback, void *user_data);
+int eom_set_output_removed_cb(eom_output_removed_cb callback, void *user_data);
 
 /**
  * @brief Unregisters the callback function.
@@ -261,7 +256,7 @@ int eom_set_output_removed_cb (eom_output_removed_cb callback, void *user_data);
  * @see eom_set_output_removed_cb()
  * @see #eom_output_removed_cb
  */
-int eom_unset_output_removed_cb (eom_output_removed_cb callback);
+int eom_unset_output_removed_cb(eom_output_removed_cb callback);
 
 /**
  * @brief Registers a callback function to get output mode changing notification from External Output Manager (EOM) module.
@@ -277,7 +272,7 @@ int eom_unset_output_removed_cb (eom_output_removed_cb callback);
  * @see eom_unset_mode_changed_cb()
  * @see #eom_mode_changed_cb
  */
-int eom_set_mode_changed_cb (eom_mode_changed_cb callback, void *user_data);
+int eom_set_mode_changed_cb(eom_mode_changed_cb callback, void *user_data);
 
 /**
  * @brief Unregisters the callback function.
@@ -291,7 +286,7 @@ int eom_set_mode_changed_cb (eom_mode_changed_cb callback, void *user_data);
  * @see eom_set_mode_changed_cb()
  * @see #eom_mode_changed_cb
  */
-int eom_unset_mode_changed_cb (eom_mode_changed_cb callback);
+int eom_unset_mode_changed_cb(eom_mode_changed_cb callback);
 
 /**
  * @brief Registers a callback function to get output attribute changing notification from External Output Manager (EOM) module.
@@ -307,7 +302,7 @@ int eom_unset_mode_changed_cb (eom_mode_changed_cb callback);
  * @see eom_unset_attribute_changed_cb()
  * @see #eom_attribute_changed_cb
  */
-int eom_set_attribute_changed_cb (eom_attribute_changed_cb callback, void *user_data);
+int eom_set_attribute_changed_cb(eom_attribute_changed_cb callback, void *user_data);
 
 /**
  * @brief Unregisters the callback function.
@@ -321,7 +316,7 @@ int eom_set_attribute_changed_cb (eom_attribute_changed_cb callback, void *user_
  * @see eom_set_attribute_changed_cb()
  * @see #eom_attribute_changed_cb
  */
-int eom_unset_attribute_changed_cb (eom_attribute_changed_cb callback);
+int eom_unset_attribute_changed_cb(eom_attribute_changed_cb callback);
 
 /**
  * @brief Gets the IDs and count of external output.
@@ -342,7 +337,7 @@ int eom_unset_attribute_changed_cb (eom_attribute_changed_cb callback);
  * @see #eom_output_id
  * @see #eom_error_e
  */
-eom_output_id* eom_get_eom_output_ids (int *count);
+eom_output_id *eom_get_eom_output_ids(int *count);
 
 /**
  * @brief Gets type of external output.
@@ -360,7 +355,7 @@ eom_output_id* eom_get_eom_output_ids (int *count);
  * @see #eom_error_e
  * @see #eom_output_type_e
  */
-int eom_get_output_type (eom_output_id output_id, eom_output_type_e *type);
+int eom_get_output_type(eom_output_id output_id, eom_output_type_e *type);
 
 /**
  * @brief Gets mode of external output.
@@ -379,7 +374,7 @@ int eom_get_output_type (eom_output_id output_id, eom_output_type_e *type);
  * @see #eom_error_e
  * @see #eom_output_mode_e
  */
-int eom_get_output_mode (eom_output_id output_id, eom_output_mode_e *mode);
+int eom_get_output_mode(eom_output_id output_id, eom_output_mode_e *mode);
 
 /**
  * @brief Gets attribute of external output.
@@ -398,7 +393,7 @@ int eom_get_output_mode (eom_output_id output_id, eom_output_mode_e *mode);
  * @see #eom_error_e
  * @see #eom_output_attribute_e
  */
-int eom_get_output_attribute (eom_output_id output_id, eom_output_attribute_e *attribute);
+int eom_get_output_attribute(eom_output_id output_id, eom_output_attribute_e *attribute);
 
 /**
  * @brief Gets attribute state of external output.
@@ -417,7 +412,7 @@ int eom_get_output_attribute (eom_output_id output_id, eom_output_attribute_e *a
  * @see #eom_error_e
  * @see #eom_output_attribute_state_e
  */
-int eom_get_output_attribute_state (eom_output_id output_id, eom_output_attribute_state_e *state);
+int eom_get_output_attribute_state(eom_output_id output_id, eom_output_attribute_state_e *state);
 
 /**
  * @brief Gets resolution of external output.
@@ -434,7 +429,7 @@ int eom_get_output_attribute_state (eom_output_id output_id, eom_output_attribut
  * @see #eom_output_id
  * @see #eom_error_e
  */
-int eom_get_output_resolution (eom_output_id output_id, int *width, int *height);
+int eom_get_output_resolution(eom_output_id output_id, int *width, int *height);
 
 /**
  * @brief Gets physical width/height (millimeters) of external output.
@@ -451,7 +446,7 @@ int eom_get_output_resolution (eom_output_id output_id, int *width, int *height)
  * @see #eom_output_id
  * @see #eom_error_e
  */
-int eom_get_output_physical_size (eom_output_id output_id, int *phy_width, int *phy_height);
+int eom_get_output_physical_size(eom_output_id output_id, int *phy_width, int *phy_height);
 
 /**
  * @brief Sets the attribute of the external output ID.
@@ -474,7 +469,7 @@ int eom_get_output_physical_size (eom_output_id output_id, int *phy_width, int *
  * @see #eom_output_id
  * @see #eom_error_e
  */
-int eom_set_output_attribute (eom_output_id output_id, eom_output_attribute_e attr);
+int eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e attr);
 
 /**
  * @brief Sets window to the external output best resolution of external output device.
@@ -492,7 +487,7 @@ int eom_set_output_attribute (eom_output_id output_id, eom_output_attribute_e at
  * @see #eom_output_id
  * @see #eom_error_e
  */
-int eom_set_output_window (eom_output_id output_id, Evas_Object *win);
+int eom_set_output_window(eom_output_id output_id, Evas_Object *win);
 
 #ifdef __cplusplus
 }

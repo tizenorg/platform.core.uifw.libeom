@@ -39,14 +39,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @brief Enumeration of eom notify type
  * @since_tizen 2.4
  */
-typedef enum
-{
-    EOM_OUTPUT_NOTIFY_NONE,                /**< None notify */
-    EOM_OUTPUT_NOTIFY_ADD,                 /**< Output add notify */
-    EOM_OUTPUT_NOTIFY_REMOVE,              /**< Output remove notify */
-    EOM_OUTPUT_NOTIFY_MODE_CHANGED,        /**< Mode change notify */
-    EOM_OUTPUT_NOTIFY_ATTRIBUTE_CHANGED,   /**< Attribute change notify */
-    EOM_OUTPUT_NOTIFY_MAX,
+typedef enum {
+	EOM_OUTPUT_NOTIFY_NONE,               /**< None notify */
+	EOM_OUTPUT_NOTIFY_ADD,                /**< Output add notify */
+	EOM_OUTPUT_NOTIFY_REMOVE,             /**< Output remove notify */
+	EOM_OUTPUT_NOTIFY_MODE_CHANGED,       /**< Mode change notify */
+	EOM_OUTPUT_NOTIFY_ATTRIBUTE_CHANGED,  /**< Attribute change notify */
+	EOM_OUTPUT_NOTIFY_MAX,
 } eom_output_notify_type_e;
 
 #endif /* __EOM_INTERNAL_H__ */

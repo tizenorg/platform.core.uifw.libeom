@@ -36,30 +36,27 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "eom.h"
 
-typedef struct
-{
-    eom_output_id     id;
-    eom_output_type_e type;
+typedef struct {
+	eom_output_id id;
+	eom_output_type_e type;
+	eom_output_mode_e output_mode;
+	eom_output_attribute_e attribute;
+	eom_output_attribute_state_e state;
 
-    eom_output_mode_e output_mode;
-    eom_output_attribute_e attribute;
-    eom_output_attribute_state_e state;
-
-    int width;
-    int height;
-    int mm_width;
-    int mm_height;
+	int width;
+	int height;
+	int mm_width;
+	int mm_height;
 } eom_output_info;
 
-struct _eom_output
-{
-    eom_output_id     id;
-    eom_output_type_e type;
+struct _eom_output {
+	eom_output_id id;
+	eom_output_type_e type;
 
-    eom_output_info  *output_info;
+	eom_output_info *output_info;
 };
 
-void _eom_mutex_lock (void);
-void _eom_mutex_unlock (void);
+void _eom_mutex_lock(void);
+void _eom_mutex_unlock(void);
 
 #endif /* __EOM_PRIVATE_H__ */

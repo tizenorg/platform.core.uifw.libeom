@@ -61,7 +61,7 @@ extern "C" {
  * @retval #EOM_ERROR_OPERATE_MESSAGE_FAILE Message operation failure
  * see #eom_output_mode_e
  */
-int eom_output_set_mode (eom_output_id output_id, eom_output_mode_e mode);
+int eom_output_set_mode(eom_output_id output_id, eom_output_mode_e mode);
 
 
 #ifdef __cplusplus
