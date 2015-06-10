@@ -48,36 +48,36 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 extern bool eom_debug_on;
 
 #ifndef HAVE_CAPI_0_1_1
-static inline void set_last_result (int i) {;}
+static inline void set_last_result(int i) {; }
 #endif
 
 #ifdef HAVE_DLOG
 #define LOG_TAG	"EOM"
 #include <dlog.h>
 #define INFO(fmt, arg...)  \
-    if (eom_debug_on) SECURE_SLOGI(fmt, ##arg)
+	if (eom_debug_on) SECURE_SLOGI(fmt, ##arg)
 #define WARN(fmt, arg...)  \
-    if (eom_debug_on) SECURE_SLOGW(fmt, ##arg)
+	if (eom_debug_on) SECURE_SLOGW(fmt, ##arg)
 #define ERR(fmt, arg...)   SECURE_SLOGE(fmt, ##arg)
 #define ERRNO(fmt, arg...) SECURE_SLOGE("(err=%s(%d)) "fmt, strerror(errno), errno, ##arg)
 #define FATAL(fmt, arg...) SECURE_SLOGF(fmt, ##arg)
-#else   /* HAVE_DLOG */
+#else	/* HAVE_DLOG */
 #include <stdlib.h>
 #define INFO(fmt, arg...)  \
-    if (eom_debug_on) fprintf(stdout,"[%s:%d] "fmt"\n", __FUNCTION__, __LINE__, ##arg)
+	if (eom_debug_on) fprintf(stdout, "[%s:%d] "fmt"\n", __FUNCTION__, __LINE__, ##arg)
 #define WARN(fmt, arg...)  \
-    if (eom_debug_on) fprintf(stderr,"[%s:%d] "fmt"\n", __FUNCTION__, __LINE__, ##arg)
-#define ERR(fmt, arg...)   fprintf(stderr,"[%s:%d] "fmt"\n", __FUNCTION__, __LINE__, ##arg)
-#define ERRNO(fmt, arg...) fprintf(stderr,"[%s:%d](err=%s(%d)) "fmt"\n", __FUNCTION__, __LINE__, strerror(errno), errno, ##arg)
-#define FATAL(fmt, arg...) fprintf(stderr,"[%s:%d] "fmt"\n", __FUNCTION__, __LINE__, ##arg)
-#endif   /* HAVE_DLOG */
+	if (eom_debug_on) fprintf(stderr, "[%s:%d] "fmt"\n", __FUNCTION__, __LINE__, ##arg)
+#define ERR(fmt, arg...)   fprintf(stderr, "[%s:%d] "fmt"\n", __FUNCTION__, __LINE__, ##arg)
+#define ERRNO(fmt, arg...) fprintf(stderr, "[%s:%d](err=%s(%d)) "fmt"\n", __FUNCTION__, __LINE__, strerror(errno), errno, ##arg)
+#define FATAL(fmt, arg...) fprintf(stderr, "[%s:%d] "fmt"\n", __FUNCTION__, __LINE__, ##arg)
+#endif	 /* HAVE_DLOG */
 
-#define WARN_IF_FAIL(cond)              {if (!(cond)) { ERR ("'%s' failed", #cond);}}
-#define RET_IF_FAIL(cond)               {if (!(cond)) { ERR ("'%s' failed", #cond); return; }}
-#define RETV_IF_FAIL(cond, val)         {if (!(cond)) { ERR ("'%s' failed", #cond); return val; }}
-#define RETV_IF_ERRNO(cond, val, errno) {if (!(cond)) { ERRNO ("'%s' failed", #cond); return val; }}
-#define GOTO_IF_FAIL(cond, dst)         {if (!(cond)) { ERR ("'%s' failed", #cond); goto dst; }}
-#define GOTO_IF_ERRNO(cond, dst, errno) {if (!(cond)) { ERRNO ("'%s' failed", #cond); goto dst; }}
-#define NEVER_GET_HERE()                ERR("** NEVER GET HERE **\n")
+#define WARN_IF_FAIL(cond)				if (!(cond)) ERR("'%s' failed", #cond);
+#define RET_IF_FAIL(cond)				{if (!(cond)) { ERR("'%s' failed", #cond); return; } }
+#define RETV_IF_FAIL(cond, val)			{if (!(cond)) { ERR("'%s' failed", #cond); return val; } }
+#define RETV_IF_ERRNO(cond, val, errno)	{if (!(cond)) { ERRNO("'%s' failed", #cond); return val; } }
+#define GOTO_IF_FAIL(cond, dst)			{if (!(cond)) { ERR("'%s' failed", #cond); goto dst; } }
+#define GOTO_IF_ERRNO(cond, dst, errno)	{if (!(cond)) { ERRNO("'%s' failed", #cond); goto dst; } }
+#define NEVER_GET_HERE()				ERR("** NEVER GET HERE **\n")
 
-#endif  /* __EOM_LOG_H__ */
+#endif	/* __EOM_LOG_H__ */

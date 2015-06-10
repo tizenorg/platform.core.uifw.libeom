@@ -40,43 +40,42 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "eom-private.h"
 
 API int
-eom_output_set_mode (eom_output_id output_id, eom_output_mode_e mode)
+eom_output_set_mode(eom_output_id output_id, eom_output_mode_e mode)
 {
-    bool ret = false;
-    GValueArray *msg_array;
-    GValueArray *ret_array;
-    GValue v = G_VALUE_INIT;
+	bool ret = false;
+	GValueArray *msg_array;
+	GValueArray *ret_array;
+	GValue v = G_VALUE_INIT;
 
-    RETV_IF_FAIL (mode < EOM_OUTPUT_MODE_MAX, EOM_ERROR_INVALID_PARAMETER);
+	RETV_IF_FAIL(mode < EOM_OUTPUT_MODE_MAX, EOM_ERROR_INVALID_PARAMETER);
 
-    _eom_mutex_lock ();
+	_eom_mutex_lock();
 
-    INFO ("mode: %d\n", mode);
+	INFO("mode: %d\n", mode);
 
-    msg_array = g_value_array_new (0);
+	msg_array = g_value_array_new(0);
 
-    g_value_init (&v, G_TYPE_INT);
-    g_value_set_int (&v, output_id);
-    msg_array = g_value_array_append (msg_array, &v);
-    g_value_set_int (&v, mode);
-    msg_array = g_value_array_append (msg_array, &v);
+	g_value_init(&v, G_TYPE_INT);
+	g_value_set_int(&v, output_id);
+	msg_array = g_value_array_append(msg_array, &v);
+	g_value_set_int(&v, mode);
+	msg_array = g_value_array_append(msg_array, &v);
 
-    ret_array = eom_dbus_client_send_message ("SetMode", msg_array);
-    g_value_array_free (msg_array);
-    if (!ret_array)
-    {
-       _eom_mutex_unlock ();
-        return EOM_ERROR_MESSAGE_SENDING_FAILURE;
-    }
+	ret_array = eom_dbus_client_send_message("SetMode", msg_array);
+	g_value_array_free(msg_array);
+	if (!ret_array) {
+		_eom_mutex_unlock();
+		return EOM_ERROR_MESSAGE_SENDING_FAILURE;
+	}
 
-    ret = g_value_get_int (g_value_array_get_nth (ret_array, 0));
+	ret = g_value_get_int(g_value_array_get_nth(ret_array, 0));
 
-    g_value_array_free (ret_array);
+	g_value_array_free(ret_array);
 
-    INFO ("SetMode: %s", (ret)?"success":"failed");
+	INFO("SetMode: %s", (ret) ? "success" : "failed");
 
-    _eom_mutex_unlock ();
+	_eom_mutex_unlock();
 
-    return (ret)?EOM_ERROR_NONE:EOM_ERROR_MESSAGE_OPERATION_FAILURE;
+	return (ret) ? EOM_ERROR_NONE : EOM_ERROR_MESSAGE_OPERATION_FAILURE;
 }
 
