@@ -35,5 +35,4 @@ libeom_la_CFLAGS = \
 
 libeom_la_SOURCES = \
 	eom.c \
-	eom-connect.c \
 	eom-dbus.c
