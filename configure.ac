@@ -57,6 +57,13 @@ AC_ARG_WITH(eom-platform, AS_HELP_STRING([--with-eom-platform=WINSYS], [eom plat
 AC_SUBST(EOM_PLATFORM)
 
 
+AC_ARG_WITH(tizen-version, AS_HELP_STRING([--with-tizen-version=T_VERSION], [eom platform (default: TIZEN_2_X)]),
+				[ TIZEN_VERSION="$withval" ],
+				[ TIZEN_VERSION="TIZEN_2_X" ])
+AC_SUBST(TIZEN_VERSION)
+
+
+
 # Checks for pkg-config packages
 PKG_CHECK_MODULES(DBUS, dbus-1)
 PKG_CHECK_MODULES(GLIB, glib-2.0 gobject-2.0)
@@ -108,6 +115,14 @@ fi
 
 AM_CONDITIONAL(HAVE_EOM_PLATFORM_X11, test "x$EOM_PLATFORM" = "xX11")
 AM_CONDITIONAL(HAVE_EOM_PLATFORM_WAYLAND, test "x$EOM_PLATFORM" = "xWAYLAND")
+
+if test "x$TIZEN_VERSION" = "xTIZEN_2_X"; then
+	AC_DEFINE(HAVE_TIZEN_2_X,1,[tizen version is 2.x.])
+fi
+
+AM_CONDITIONAL(HAVE_TIZEN_VERSION_2_X, test "x$TIZEN_VERSION" = "xTIZEN_2_X")
+
+
 
 # Checks for header files.
 AC_HEADER_STDC
