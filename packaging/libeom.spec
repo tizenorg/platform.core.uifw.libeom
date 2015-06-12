@@ -43,7 +43,11 @@ export LDFLAGS="$LDFLAGS -Wl,--hash-style=both -Wl,--as-needed"
 %if %{with wayland}
 %reconfigure --disable-dlog --disable-static --with-eom-platform=WAYLAND
 %else
-%reconfigure --disable-dlog --disable-static --with-eom-platform=X11
+%if 0%{?tizen_version_major} == 2
+%reconfigure --disable-dlog --disable-static --with-eom-platform=X11 --with-tizen-version=TIZEN_2_X
+%else
+%reconfigure --disable-dlog --disable-static --with-eom-platform=X11 --with-tizen-version=TIZEN_3_X
+%endif
 %endif
 
 make %{?_smp_mflags}

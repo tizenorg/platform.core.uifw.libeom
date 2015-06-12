@@ -1199,8 +1199,10 @@ eom_set_output_window(eom_output_id output_id, Evas_Object *win)
 	g_value_array_free(ret_array);
 
 	if (ret == 1) {
+#ifdef HAVE_TIZEN_2_X
 		const char *profile = "desktop";
 		elm_win_profiles_set(win, &profile, 1);
+#endif
 		elm_win_fullscreen_set(win, EINA_TRUE);
 		INFO("SetWindow: success\n");
 		_eom_mutex_unlock();
