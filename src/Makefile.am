@@ -33,6 +33,12 @@ libeom_la_CFLAGS = \
     @LIBEOM_CFLAGS@ \
     -I$(top_srcdir)/include
 
+libeom_la_CFLAGS += \
+	-I$(top_srcdir)/src/dbus
+
 libeom_la_SOURCES = \
-	eom.c \
-	eom-dbus.c
+	eom.c
+
+libeom_la_SOURCES += \
+	dbus/eom-dbus.c
+

@@ -481,8 +481,6 @@ eom_init(void)
 
 	_eom_mutex_lock();
 
-	g_type_init();
-
 	ret = eom_dbus_client_init(_eom_output_process_notify_cb);
 
 	_eom_mutex_unlock();
