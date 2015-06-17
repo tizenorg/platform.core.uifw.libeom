@@ -142,7 +142,6 @@ TYPE(eom_output_type_e output_type)
 	default:
 		return "UNKNOWN";
 	}
-	return "UNKNOWN";
 }
 
 static void
@@ -511,9 +510,6 @@ _eom_alloc_output_info(int output_id, int output_type)
 	return output_info;
 
 fail:
-	if (output_info)
-		free(output_info);
-
 	ERR("fail: alloc '%s(%d)''s info", TYPE(output_type), output_id);
 
 	return NULL;
@@ -655,9 +651,6 @@ eom_get_eom_output_ids(int *count)
 fail:
 	if (ret_array)
 		g_value_array_free(ret_array);
-
-	if (output_ids)
-		free(output_ids);
 
 	*count = 0;
 

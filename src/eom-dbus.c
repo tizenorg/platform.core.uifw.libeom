@@ -505,8 +505,6 @@ err_send:
 		dbus_message_unref(msg);
 	if (reply_msg)
 		dbus_message_unref(reply_msg);
-	if (ret_array)
-		g_value_array_free(ret_array);
 
 	dbus_error_free(&err);
 
