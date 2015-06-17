@@ -38,27 +38,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glib.h>
 #include <glib-object.h>
 #include "eom.h"
+#include "eom-private.h"
 
-#define EOM_DBUS_SERVER     "org.eom.server"
-#define EOM_DBUS_CLIENT     "org.eom.client"
-#define EOM_DBUS_INTERFACE  "org.eom.interface"
-#define EOM_DBUS_PATH       "/org/eom/path"
+bool eom_dbus_client_init(notify_func func);
+void eom_dbus_client_deinit(GList *cb_info_list);
 
-#define STR_LEN 128
-
-typedef void (*MethodFunc) (void *data, GValueArray *noti_array);
-
-typedef struct _EomDBusClientMethod {
-	char name[STR_LEN];
-	MethodFunc func;
-	void *data;
-	struct _EomDBusClientMethod *next;
-} EomDBusClientMethod;
-
-bool eom_dbus_client_connect(void);
-void eom_dbus_client_disconnect(void);
 GValueArray *eom_dbus_client_send_message(char *method, GValueArray *array);
-bool eom_dbus_client_add_method(EomDBusClientMethod *method);
-void eom_dbus_client_remove_method(EomDBusClientMethod *method);
 
 #endif /* __EOM_DBUS_H__ */

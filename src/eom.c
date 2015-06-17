@@ -94,9 +94,6 @@ bool eom_debug_on;
 
 static pthread_mutex_t eom_lock;
 
-static bool dbus_initialized;
-static EomDBusClientMethod dbus_method;
-
 static GList *cb_info_list;
 static GList *output_info_list;
 
@@ -192,46 +189,6 @@ void
 _eom_mutex_unlock(void)
 {
 	pthread_mutex_unlock(&eom_lock);
-}
-
-static bool
-_eom_dbus_init(void)
-{
-	if (dbus_initialized)
-		return true;
-
-	if (!eom_dbus_client_connect())
-		return false;
-
-	snprintf(dbus_method.name, sizeof(dbus_method.name), "%s", "Notify");
-	dbus_method.func = _eom_output_process_notify_cb;
-	dbus_method.data = NULL;
-	eom_dbus_client_add_method(&dbus_method);
-
-	dbus_initialized = true;
-
-	INFO("dbus init");
-
-	return true;
-}
-
-static void
-_eom_dbus_deinit(void)
-{
-	if (!dbus_initialized)
-		return;
-
-	/* An output instance and a callback can be created and be added only by user.
-	 * If there is cb_info_list, it means that user is still
-	 * watching and interested with eom dbus message.
-	 */
-	if (cb_info_list)
-		return;
-
-	eom_dbus_client_remove_method(&dbus_method);
-	eom_dbus_client_disconnect();
-
-	dbus_initialized = false;
 }
 
 static void
@@ -526,7 +483,7 @@ eom_init(void)
 
 	g_type_init();
 
-	ret = _eom_dbus_init();
+	ret = eom_dbus_client_init(_eom_output_process_notify_cb);
 
 	_eom_mutex_unlock();
 
@@ -541,7 +498,8 @@ eom_deinit(void)
 	GList *l;
 
 	_eom_mutex_lock();
-	_eom_dbus_deinit();
+
+	eom_dbus_client_deinit(cb_info_list);
 
 	/* TODO: redesign the life-cycle of output_infos */
 	/* destory output_info. */

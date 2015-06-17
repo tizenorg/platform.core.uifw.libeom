@@ -37,9 +37,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "eom.h"
 #include "eom-log.h"
 #include "eom-dbus.h"
+#include "eom-private.h"
+
+#define EOM_DBUS_SERVER     "org.eom.server"
+#define EOM_DBUS_CLIENT     "org.eom.client"
+#define EOM_DBUS_INTERFACE  "org.eom.interface"
+#define EOM_DBUS_PATH       "/org/eom/path"
+
+#define STR_LEN 128
 
 #define REPLY_TIME  1000
 #define ARGV_NUM    64
+
+typedef struct _EomDBusClientMethod {
+	char name[STR_LEN];
+	notify_func func;
+	void *data;
+	struct _EomDBusClientMethod *next;
+} EomDBusClientMethod;
 
 typedef struct _EomDBusClientInfo {
 	DBusConnection *conn;
@@ -52,7 +67,10 @@ typedef struct _EomDBusClientInfo {
 
 static EomDBusClientInfo client_info;
 
-static void _eom_dbus_client_deinit(EomDBusClientInfo *info);
+static bool dbus_initialized;
+static EomDBusClientMethod dbus_method;
+
+static void _eom_dbus_client_deinitialize(EomDBusClientInfo *info);
 
 static int
 _eom_dbus_need_private_conn(void)
@@ -283,7 +301,7 @@ _eom_dbus_client_msg_filter(DBusConnection *conn, DBusMessage *msg, void *data)
 
 	if (dbus_message_is_signal(msg, DBUS_INTERFACE_LOCAL, "Disconnected")) {
 		INFO("[EOM] disconnected by signal");
-		_eom_dbus_client_deinit(info);
+		_eom_dbus_client_deinitialize(info);
 
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
@@ -292,7 +310,7 @@ _eom_dbus_client_msg_filter(DBusConnection *conn, DBusMessage *msg, void *data)
 }
 
 static int
-_eom_dbus_client_init(EomDBusClientInfo *info)
+_eom_dbus_client_initialize(EomDBusClientInfo *info)
 {
 	DBusError err;
 	int ret;
@@ -387,7 +405,7 @@ free_err:
 }
 
 static void
-_eom_dbus_client_deinit(EomDBusClientInfo *info)
+_eom_dbus_client_deinitialize(EomDBusClientInfo *info)
 {
 	DBusError err;
 
@@ -414,8 +432,9 @@ _eom_dbus_client_deinit(EomDBusClientInfo *info)
 	INFO("[EOM] disconnected");
 }
 
-bool
-eom_dbus_client_connect(void)
+
+static bool
+_eom_dbus_client_connect(void)
 {
 	if (client_info.conn)
 		return true;
@@ -424,20 +443,20 @@ eom_dbus_client_connect(void)
 
 	client_info.fd = -1;
 
-	if (!_eom_dbus_client_init(&client_info))
+	if (!_eom_dbus_client_initialize(&client_info))
 		return false;
 
 	return true;
 }
 
-void
-eom_dbus_client_disconnect(void)
+static void
+_eom_dbus_client_disconnect(void)
 {
-	_eom_dbus_client_deinit(&client_info);
+	_eom_dbus_client_deinitialize(&client_info);
 }
 
-bool
-eom_dbus_client_add_method(EomDBusClientMethod *method)
+static bool
+_eom_dbus_client_add_method(EomDBusClientMethod *method)
 {
 	EomDBusClientMethod **prev;
 
@@ -449,8 +468,8 @@ eom_dbus_client_add_method(EomDBusClientMethod *method)
 	return true;
 }
 
-void
-eom_dbus_client_remove_method(EomDBusClientMethod *method)
+static void
+_eom_dbus_client_remove_method(EomDBusClientMethod *method)
 {
 	EomDBusClientMethod **prev;
 
@@ -460,6 +479,46 @@ eom_dbus_client_remove_method(EomDBusClientMethod *method)
 			method->next = NULL;
 			break;
 		}
+}
+
+bool
+eom_dbus_client_init(notify_func func)
+{
+	if (dbus_initialized)
+		return true;
+
+	if (!_eom_dbus_client_connect())
+		return false;
+
+	snprintf(dbus_method.name, sizeof(dbus_method.name), "%s", "Notify");
+	dbus_method.func = func;
+	dbus_method.data = NULL;
+	_eom_dbus_client_add_method(&dbus_method);
+
+	dbus_initialized = true;
+
+	INFO("dbus init");
+
+	return true;
+}
+
+void
+eom_dbus_client_deinit(GList *cb_info_list)
+{
+	if (!dbus_initialized)
+		return;
+
+	/* An output instance and a callback can be created and be added only by user.
+	 * If there is cb_info_list, it means that user is still
+	 * watching and interested with eom dbus message.
+	 */
+	if (cb_info_list)
+		return;
+
+	_eom_dbus_client_remove_method(&dbus_method);
+	_eom_dbus_client_disconnect();
+
+	dbus_initialized = false;
 }
 
 GValueArray*

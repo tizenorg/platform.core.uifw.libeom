@@ -49,12 +49,8 @@ typedef struct {
 	int mm_height;
 } eom_output_info;
 
-struct _eom_output {
-	eom_output_id id;
-	eom_output_type_e type;
-
-	eom_output_info *output_info;
-};
+/* notify callback function prototype */
+typedef void (*notify_func) (void *data, GValueArray *array);
 
 void _eom_mutex_lock(void);
 void _eom_mutex_unlock(void);
