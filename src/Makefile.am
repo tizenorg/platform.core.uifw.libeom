@@ -31,14 +31,30 @@ libeom_la_LDFLAGS = ${LDFLAGS}
 libeom_la_CFLAGS = \
     ${CFLAGS} \
     @LIBEOM_CFLAGS@ \
-    -I$(top_srcdir)/include
-
-libeom_la_CFLAGS += \
-	-I$(top_srcdir)/src/dbus
+    -I$(top_srcdir)/include \
+    -I$(top_srcdir)/src
 
 libeom_la_SOURCES = \
 	eom.c
 
+if HAVE_EOM_PLATFORM_X11
+libeom_la_CFLAGS += \
+	-I$(top_srcdir)/src/dbus
+
 libeom_la_SOURCES += \
 	dbus/eom-dbus.c
+endif
+
+if HAVE_EOM_PLATFORM_WAYLAND
+libeom_la_CFLAGS += \
+	-I$(top_srcdir)/src/wayland \
+	-I$(top_srcdir)/src/wayland/protocol
+
+libeom_la_SOURCES += \
+	wayland/protocol/xdg-shell-protocol.c \
+	wayland/protocol/eom-protocol.c \
+	wayland/eom-wayland.c
+endif
+
+
 

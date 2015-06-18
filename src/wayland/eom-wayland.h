@@ -2,12 +2,10 @@
 
 eom (external output manager)
 
-Copyright 2014 Samsung Electronics co., Ltd. All Rights Reserved.
+Copyright 2015 Samsung Electronics co., Ltd. All Rights Reserved.
 
 Contact:
 SooChan Lim <sc1.lim@samsung.com>
-Boram Park <boram1288.park@samsung.com>
-Changyeon Lee <cyeon.lee@samsung.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
@@ -31,8 +29,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 **************************************************************************/
 
-#ifndef __EOM_DBUS_H__
-#define __EOM_DBUS_H__
+#ifndef __EOM_WAYLAND_H__
+#define __EOM_WAYLAND_H__
 
 #include <stdbool.h>
 #include <glib.h>
@@ -40,14 +38,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "eom.h"
 #include "eom-private.h"
 
-bool eom_dbus_client_init(notify_func func);
-void eom_dbus_client_deinit(GList *cb_info_list);
+bool eom_wayland_client_init(notify_func func);
+void eom_wayland_client_deinit(GList *cb_info_list);
 
-GValueArray *eom_dbus_client_get_output_ids(void);
-GValueArray *eom_dbus_client_get_output_info(eom_output_id output_id);
-GValueArray *eom_dbus_client_set_attribute(eom_output_id output_id, eom_output_attribute_e attry);
-GValueArray *eom_dbus_client_set_window(eom_output_id output_id, Evas_Object *win);
+GValueArray *eom_wayland_client_get_output_ids(void);
+GValueArray *eom_wayland_client_get_output_info(eom_output_id output_id);
+GValueArray *eom_wayland_client_set_attribute(eom_output_id output_id, eom_output_attribute_e attry);
+GValueArray *eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win);
 
-GValueArray *eom_dbus_client_send_message(char *method, GValueArray *array);
 
-#endif /* __EOM_DBUS_H__ */
+#endif /* __EOM_WAYLAND_H__ */
+

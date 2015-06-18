@@ -569,3 +569,123 @@ err_send:
 
 	return NULL;
 }
+
+
+GValueArray *
+eom_dbus_client_get_output_ids(void)
+{
+	GValueArray *array = NULL;
+
+	array = eom_dbus_client_send_message("GetOutputIDs", NULL);
+	RETV_IF_FAIL(array != NULL, NULL);
+
+	return array;
+}
+
+GValueArray *
+eom_dbus_client_get_output_info(eom_output_id output_id)
+{
+	GValueArray *array = NULL;
+	GValueArray *msg_array;
+	GValue v = G_VALUE_INIT;
+
+	msg_array = g_value_array_new(0);
+
+	g_value_init(&v, G_TYPE_INT);
+	g_value_set_int(&v, output_id);
+	msg_array = g_value_array_append(msg_array, &v);
+
+	array = eom_dbus_client_send_message("GetOutputInfo", msg_array);
+	GOTO_IF_FAIL(array != NULL, fail);
+
+	g_value_array_free(msg_array);
+
+	return array;
+fail:
+	g_value_array_free(msg_array);
+
+	return NULL;
+}
+
+GValueArray *
+eom_dbus_client_set_attribute(eom_output_id output_id, eom_output_attribute_e attr)
+{
+	GValueArray *array = NULL;
+	GValueArray *msg_array;
+	GValue v = G_VALUE_INIT;
+	int pid = 0;
+
+	pid = getpid();
+
+	INFO("output_id: %d, pid: %d, attr: %d\n", output_id, pid, attr);
+
+	msg_array = g_value_array_new(0);
+
+	/* 0:output_id, 1:pid, 2:eom_attribuete_e */
+	g_value_init(&v, G_TYPE_INT);
+	g_value_set_int(&v, output_id);
+	msg_array = g_value_array_append(msg_array, &v);
+	g_value_set_int(&v, pid);
+	msg_array = g_value_array_append(msg_array, &v);
+	g_value_set_int(&v, attr);
+	msg_array = g_value_array_append(msg_array, &v);
+
+	array = eom_dbus_client_send_message("SetOutputAttribute", msg_array);
+	GOTO_IF_FAIL(array != NULL, fail);
+
+	g_value_array_free(msg_array);
+
+	return array;
+fail:
+	g_value_array_free(msg_array);
+
+	return NULL;
+}
+
+GValueArray *
+eom_dbus_client_set_window(eom_output_id output_id, Evas_Object *win)
+{
+	GValueArray *array = NULL;
+	GValueArray *msg_array;
+	GValue v = G_VALUE_INIT;
+	int pid = 0;
+	Ecore_X_Window xwin;
+	int ret = 0;
+
+	pid = getpid();
+	xwin = elm_win_xwindow_get(win);
+
+	INFO("output_id: %d, pid: %d, xwin: %d\n", output_id, pid, xwin);
+
+	msg_array = g_value_array_new(0);
+
+	/* 0:output_id, 1:pid, 2:eom_attribuete_e */
+	g_value_init(&v, G_TYPE_INT);
+	g_value_set_int(&v, output_id);
+	msg_array = g_value_array_append(msg_array, &v);
+	g_value_set_int(&v, pid);
+	msg_array = g_value_array_append(msg_array, &v);
+	g_value_set_int(&v, xwin);
+	msg_array = g_value_array_append(msg_array, &v);
+
+	array = eom_dbus_client_send_message("SetWindow", msg_array);
+	RETV_IF_FAIL(array != NULL, NULL);
+
+	g_value_array_free(msg_array);
+
+	ret = g_value_get_int(g_value_array_get_nth(array, 0));
+	GOTO_IF_FAIL(ret != 0, fail);
+
+#ifdef HAVE_TIZEN_2_X
+	const char *profile = "desktop";
+	elm_win_profiles_set(win, &profile, 1);
+#endif
+	elm_win_fullscreen_set(win, EINA_TRUE);
+
+	return array;
+fail:
+	g_value_array_free(msg_array);
+
+	return NULL;
+}
+

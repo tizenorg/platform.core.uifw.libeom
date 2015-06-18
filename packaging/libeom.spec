@@ -12,6 +12,7 @@ Source1001: 	libeom.manifest
 
 %if %{with wayland}
 BuildRequires:  pkgconfig(wayland-client)
+BuildRequires:  pkgconfig(ecore-wayland)
 %else
 %endif
 BuildRequires:  pkgconfig(dlog)

@@ -41,7 +41,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "eom.h"
 #include "eom_internal.h"
 #include "eom-log.h"
+#ifdef HAVE_WAYLAND
+#include "eom-wayland.h"
+#else
 #include "eom-dbus.h"
+#endif
 #include "eom-private.h"
 
 typedef struct {
@@ -481,7 +485,11 @@ eom_init(void)
 
 	_eom_mutex_lock();
 
+#ifdef HAVE_WAYLAND
+	ret = eom_wayland_client_init(_eom_output_process_notify_cb);
+#else
 	ret = eom_dbus_client_init(_eom_output_process_notify_cb);
+#endif
 
 	_eom_mutex_unlock();
 
@@ -496,8 +504,11 @@ eom_deinit(void)
 	GList *l;
 
 	_eom_mutex_lock();
-
+#ifdef HAVE_WAYLAND
+	eom_wayland_client_deinit(cb_info_list);
+#else
 	eom_dbus_client_deinit(cb_info_list);
+#endif
 
 	/* TODO: redesign the life-cycle of output_infos */
 	/* destory output_info. */
@@ -527,8 +538,11 @@ eom_get_eom_output_ids(int *count)
 
 	_eom_mutex_lock();
 
-	ret_array = eom_dbus_client_send_message("GetOutputIDs", NULL);
-
+#ifdef HAVE_WAYLAND
+	ret_array = eom_wayland_client_get_output_ids();
+#else
+	ret_array = eom_dbus_client_get_output_ids();
+#endif
 	if (!ret_array) {
 		*count = 0;
 		_eom_mutex_unlock();
@@ -562,22 +576,16 @@ eom_get_eom_output_ids(int *count)
 		/* add output_info to output_info_list */
 		eom_output_info *output_info;
 		eom_output_id output_id = output_ids[i];
-		GValueArray *msg_array;
-		GValue v = G_VALUE_INIT;
 
 		output_info = _eom_find_output_info(output_id);
 		if (output_info)
 			continue;
 
-		msg_array = g_value_array_new(0);
-
-		g_value_init(&v, G_TYPE_INT);
-		g_value_set_int(&v, output_id);
-		msg_array = g_value_array_append(msg_array, &v);
-
-		ret_array = eom_dbus_client_send_message("GetOutputInfo", msg_array);
-		g_value_array_free(msg_array);
-
+#ifdef HAVE_WAYLAND
+		ret_array = eom_wayland_client_get_output_info(output_id);
+#else
+		ret_array = eom_dbus_client_get_output_info(output_id);
+#endif
 		if (ret_array) {
 			/* 0:output_id, 1:output_type, 2:output_mode, 3:w, 4:h, 5:w_mm, 6:h_mm */
 			output_info = _eom_alloc_output_info(g_value_get_int(g_value_array_get_nth(ret_array, 0)),
@@ -886,10 +894,7 @@ eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e attr)
 {
 	eom_output_info *output_info = NULL;
 	bool ret = false;
-	GValueArray *msg_array;
 	GValueArray *ret_array;
-	GValue v = G_VALUE_INIT;
-	int pid = 0;
 
 	RETV_IF_FAIL(output_id != 0, EOM_ERROR_INVALID_PARAMETER);
 	RETV_IF_FAIL(attr > EOM_OUTPUT_ATTRIBUTE_NONE, EOM_ERROR_INVALID_PARAMETER);
@@ -904,23 +909,13 @@ eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e attr)
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
 
-	pid = getpid();
+	INFO("output_id: %d, attr: %d\n", output_id, attr);
 
-	INFO("output_id: %d, pid: %d, mode: %d\n", output_id, pid, attr);
-
-	msg_array = g_value_array_new(0);
-
-	/* 0:output_id, 1:pid, 2:eom_attribuete_e */
-	g_value_init(&v, G_TYPE_INT);
-	g_value_set_int(&v, output_id);
-	msg_array = g_value_array_append(msg_array, &v);
-	g_value_set_int(&v, pid);
-	msg_array = g_value_array_append(msg_array, &v);
-	g_value_set_int(&v, attr);
-	msg_array = g_value_array_append(msg_array, &v);
-
-	ret_array = eom_dbus_client_send_message("SetOutputAttribute", msg_array);
-	g_value_array_free(msg_array);
+#ifdef HAVE_WAYLAND
+	ret_array = eom_wayland_client_set_attribute(output_id, attr);
+#else
+	ret_array = eom_dbus_client_set_attribute(output_id, attr);
+#endif
 	if (!ret_array) {
 		_eom_mutex_unlock();
 		return EOM_ERROR_MESSAGE_SENDING_FAILURE;
@@ -1099,14 +1094,9 @@ eom_get_output_physical_size(eom_output_id output_id, int *phy_width, int *phy_h
 API int
 eom_set_output_window(eom_output_id output_id, Evas_Object *win)
 {
-#ifdef HAVE_X11
 	eom_output_info *output_info = NULL;
 	bool ret = false;
-	GValueArray *msg_array;
 	GValueArray *ret_array;
-	GValue v = G_VALUE_INIT;
-	Ecore_X_Window xwin;
-	int pid = 0;
 
 	RETV_IF_FAIL(output_id != 0, EOM_ERROR_INVALID_PARAMETER);
 	RETV_IF_FAIL(win != NULL, EOM_ERROR_INVALID_PARAMETER);
@@ -1120,49 +1110,30 @@ eom_set_output_window(eom_output_id output_id, Evas_Object *win)
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
 
-	pid = getpid();
-	xwin = elm_win_xwindow_get(win);
+	INFO("output_id: %d, evas_win: %p\n", output_id, win);
 
-	INFO("output_id: %d, pid: %d, xwin: %d\n", output_id, pid, xwin);
-
-	msg_array = g_value_array_new(0);
-
-	/* 0:output_id, 1:pid, 2:eom_attribuete_e */
-	g_value_init(&v, G_TYPE_INT);
-	g_value_set_int(&v, output_id);
-	msg_array = g_value_array_append(msg_array, &v);
-	g_value_set_int(&v, pid);
-	msg_array = g_value_array_append(msg_array, &v);
-	g_value_set_int(&v, xwin);
-	msg_array = g_value_array_append(msg_array, &v);
-
-	ret_array = eom_dbus_client_send_message("SetWindow", msg_array);
-	g_value_array_free(msg_array);
+#ifdef HAVE_WAYLAND
+	ret_array = eom_wayland_client_set_window(output_id, win);
+#else
+	ret_array = eom_dbus_client_set_window(output_id, win);
+#endif
 	if (!ret_array) {
 		_eom_mutex_unlock();
 		return EOM_ERROR_MESSAGE_SENDING_FAILURE;
 	}
 
 	ret = g_value_get_int(g_value_array_get_nth(ret_array, 0));
-
 	g_value_array_free(ret_array);
-
-	if (ret == 1) {
-#ifdef HAVE_TIZEN_2_X
-		const char *profile = "desktop";
-		elm_win_profiles_set(win, &profile, 1);
-#endif
-		elm_win_fullscreen_set(win, EINA_TRUE);
-		INFO("SetWindow: success\n");
+	if (ret == 0) {
+		ERR("SetWindow: failed\n");
 		_eom_mutex_unlock();
-		return EOM_ERROR_NONE;
+		return EOM_ERROR_MESSAGE_OPERATION_FAILURE;
 	}
 
-	INFO("SetWindow: failed\n");
+	INFO("SetWindow: success\n");
+
 	_eom_mutex_unlock();
-	return EOM_ERROR_MESSAGE_OPERATION_FAILURE;
-#else
+
 	return EOM_ERROR_NONE;
-#endif
 }
 
