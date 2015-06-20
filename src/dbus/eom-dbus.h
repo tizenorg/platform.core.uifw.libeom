@@ -43,11 +43,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 bool eom_dbus_client_init(notify_func func);
 void eom_dbus_client_deinit(GList *cb_info_list);
 
-GValueArray *eom_dbus_client_get_output_ids(void);
-GValueArray *eom_dbus_client_get_output_info(eom_output_id output_id);
-GValueArray *eom_dbus_client_set_attribute(eom_output_id output_id, eom_output_attribute_e attry);
-GValueArray *eom_dbus_client_set_window(eom_output_id output_id, Evas_Object *win);
+GArray *eom_dbus_client_get_output_ids(void);
+GArray *eom_dbus_client_get_output_info(eom_output_id output_id);
+GArray *eom_dbus_client_set_attribute(eom_output_id output_id, eom_output_attribute_e attry);
+GArray *eom_dbus_client_set_window(eom_output_id output_id, Evas_Object *win);
 
-GValueArray *eom_dbus_client_send_message(char *method, GValueArray *array);
+GArray *eom_dbus_client_send_message(char *method, GArray *array);
 
 #endif /* __EOM_DBUS_H__ */

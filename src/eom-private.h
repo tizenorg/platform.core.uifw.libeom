@@ -50,7 +50,7 @@ typedef struct {
 } eom_output_info;
 
 /* notify callback function prototype */
-typedef void (*notify_func) (void *data, GValueArray *array);
+typedef void (*notify_func) (void *data, GArray *array);
 
 void _eom_mutex_lock(void);
 void _eom_mutex_unlock(void);

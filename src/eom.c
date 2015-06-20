@@ -101,7 +101,7 @@ static pthread_mutex_t eom_lock;
 static GList *cb_info_list;
 static GList *output_info_list;
 
-static void _eom_output_process_notify_cb(void *data, GValueArray *array);
+static void _eom_output_process_notify_cb(void *data, GArray *array);
 static eom_output_info *_eom_find_output_info(eom_output_id output_id);
 static eom_output_info *_eom_alloc_output_info(int output_id, int output_type);
 static const char*
@@ -299,7 +299,7 @@ _eom_output_call_notify_cb(eom_output_notify_s *notify)
 }
 
 static void
-_eom_output_process_notify_cb(void *data, GValueArray *array)
+_eom_output_process_notify_cb(void *data, GArray *array)
 {
 	eom_output_notify_s notify;
 	eom_output_info *output_info;
@@ -307,30 +307,30 @@ _eom_output_process_notify_cb(void *data, GValueArray *array)
 	GValue *v;
 
 	RET_IF_FAIL(array != NULL);
-	RET_IF_FAIL(array->n_values == 11);
+	RET_IF_FAIL(array->len == 11);
 
 	/* 11 args 0: notify_type 1:output_id, 2:output_type, 3:output_mode, 4:w, 5:h, 6:w_mm, 7:h_mm, 8:pid, 9:attri, 10:state */
-	v = g_value_array_get_nth(array, 0);
+	v = &g_array_index(array, GValue, 0);
 	notify_type = g_value_get_int(v);
-	v = g_value_array_get_nth(array, 1);
+	v = &g_array_index(array, GValue, 1);
 	output_id = g_value_get_int(v);
-	v = g_value_array_get_nth(array, 2);
+	v = &g_array_index(array, GValue, 2);
 	output_type = g_value_get_int(v);
-	v = g_value_array_get_nth(array, 3);
+	v = &g_array_index(array, GValue, 3);
 	output_mode = g_value_get_int(v);
-	v = g_value_array_get_nth(array, 4);
+	v = &g_array_index(array, GValue, 4);
 	w = g_value_get_int(v);
-	v = g_value_array_get_nth(array, 5);
+	v = &g_array_index(array, GValue, 5);
 	h = g_value_get_int(v);
-	v = g_value_array_get_nth(array, 6);
+	v = &g_array_index(array, GValue, 6);
 	w_mm = g_value_get_int(v);
-	v = g_value_array_get_nth(array, 7);
+	v = &g_array_index(array, GValue, 7);
 	h_mm = g_value_get_int(v);
-	v = g_value_array_get_nth(array, 8);
+	v = &g_array_index(array, GValue, 8);
 	pid = g_value_get_int(v);
-	v = g_value_array_get_nth(array, 9);
+	v = &g_array_index(array, GValue, 9);
 	attr = g_value_get_int(v);
-	v = g_value_array_get_nth(array, 10);
+	v = &g_array_index(array, GValue, 10);
 	state = g_value_get_int(v);
 
 	INFO("notify: %d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
@@ -527,7 +527,7 @@ eom_deinit(void)
 API eom_output_id*
 eom_get_eom_output_ids(int *count)
 {
-	GValueArray *ret_array = NULL;
+	GArray *ret_array = NULL;
 	eom_output_id *output_ids = NULL;
 	int i;
 
@@ -550,25 +550,25 @@ eom_get_eom_output_ids(int *count)
 		return NULL;
 	}
 
-	if (ret_array->n_values == 0) {
-		g_value_array_free(ret_array);
+	if (ret_array->len == 0) {
+		g_array_free(ret_array, FALSE);
 		*count = 0;
 		_eom_mutex_unlock();
 		set_last_result(EOM_ERROR_NONE);
 		return NULL;
 	}
 
-	output_ids = calloc(ret_array->n_values, sizeof(eom_output_id));
+	output_ids = calloc(ret_array->len, sizeof(eom_output_id));
 	GOTO_IF_FAIL(output_ids != NULL, fail);
 
-	*count = ret_array->n_values;
-	for (i = 0; i < ret_array->n_values; i++) {
-		GValue *v = g_value_array_get_nth(ret_array, i);
+	*count = ret_array->len;
+	for (i = 0; i < ret_array->len; i++) {
+		GValue *v = &g_array_index(ret_array, GValue, i);
 		output_ids[i] = g_value_get_int(v);
 		INFO("output_ids: %d", output_ids[i]);
 	}
 
-	g_value_array_free(ret_array);
+	g_array_free(ret_array, FALSE);
 	ret_array = NULL;
 
 	/* TODO: redesign the life-cycle of output_infos */
@@ -588,19 +588,19 @@ eom_get_eom_output_ids(int *count)
 #endif
 		if (ret_array) {
 			/* 0:output_id, 1:output_type, 2:output_mode, 3:w, 4:h, 5:w_mm, 6:h_mm */
-			output_info = _eom_alloc_output_info(g_value_get_int(g_value_array_get_nth(ret_array, 0)),
-												  g_value_get_int(g_value_array_get_nth(ret_array, 1)));
+			output_info = _eom_alloc_output_info(g_value_get_int(&g_array_index(ret_array, GValue, 0)),
+												  g_value_get_int(&g_array_index(ret_array, GValue, 1)));
 			if (output_info) {
 				output_info_list = g_list_append(output_info_list, output_info);
-				_eom_set_output_info_mode(output_info, g_value_get_int(g_value_array_get_nth(ret_array, 2)));
-				_eom_set_output_info_size(output_info, g_value_get_int(g_value_array_get_nth(ret_array, 3)),
-														g_value_get_int(g_value_array_get_nth(ret_array, 4)));
-				_eom_set_output_info_phy_size(output_info, g_value_get_int(g_value_array_get_nth(ret_array, 5)),
-															g_value_get_int(g_value_array_get_nth(ret_array, 6)));
+				_eom_set_output_info_mode(output_info, g_value_get_int(&g_array_index(ret_array, GValue, 2)));
+				_eom_set_output_info_size(output_info, g_value_get_int(&g_array_index(ret_array, GValue, 3)),
+														g_value_get_int(&g_array_index(ret_array, GValue, 4)));
+				_eom_set_output_info_phy_size(output_info, g_value_get_int(&g_array_index(ret_array, GValue, 5)),
+															g_value_get_int(&g_array_index(ret_array, GValue, 6)));
 				INFO("GetOutputInfo: %s(%d)", TYPE(output_info->type), output_info->id);
 			}
 
-			g_value_array_free(ret_array);
+			g_array_free(ret_array, FALSE);
 			ret_array = NULL;
 		} else
 			ERR("fail: get id(%d)'s information", output_id);
@@ -614,7 +614,7 @@ eom_get_eom_output_ids(int *count)
 
 fail:
 	if (ret_array)
-		g_value_array_free(ret_array);
+		g_array_free(ret_array, FALSE);
 
 	*count = 0;
 
@@ -894,7 +894,7 @@ eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e attr)
 {
 	eom_output_info *output_info = NULL;
 	bool ret = false;
-	GValueArray *ret_array;
+	GArray *ret_array;
 
 	RETV_IF_FAIL(output_id != 0, EOM_ERROR_INVALID_PARAMETER);
 	RETV_IF_FAIL(attr > EOM_OUTPUT_ATTRIBUTE_NONE, EOM_ERROR_INVALID_PARAMETER);
@@ -921,9 +921,9 @@ eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e attr)
 		return EOM_ERROR_MESSAGE_SENDING_FAILURE;
 	}
 
-	ret = g_value_get_int (g_value_array_get_nth(ret_array, 0));
+	ret = g_value_get_int(&g_array_index(ret_array, GValue, 0));
 
-	g_value_array_free(ret_array);
+	g_array_free(ret_array, FALSE);
 
 	INFO("SetOutputAttribute: %s", (ret) ? "success" : "failed");
 
@@ -1096,7 +1096,7 @@ eom_set_output_window(eom_output_id output_id, Evas_Object *win)
 {
 	eom_output_info *output_info = NULL;
 	bool ret = false;
-	GValueArray *ret_array;
+	GArray *ret_array;
 
 	RETV_IF_FAIL(output_id != 0, EOM_ERROR_INVALID_PARAMETER);
 	RETV_IF_FAIL(win != NULL, EOM_ERROR_INVALID_PARAMETER);
@@ -1122,8 +1122,8 @@ eom_set_output_window(eom_output_id output_id, Evas_Object *win)
 		return EOM_ERROR_MESSAGE_SENDING_FAILURE;
 	}
 
-	ret = g_value_get_int(g_value_array_get_nth(ret_array, 0));
-	g_value_array_free(ret_array);
+	ret = g_value_get_int(&g_array_index(ret_array, GValue, 0));
+	g_array_free(ret_array, FALSE);
 	if (ret == 0) {
 		ERR("SetWindow: failed\n");
 		_eom_mutex_unlock();

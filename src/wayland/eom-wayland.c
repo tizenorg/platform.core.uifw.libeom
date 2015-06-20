@@ -260,83 +260,83 @@ _convert_to_wl_eom_attribute(eom_output_attribute_e attr)
 static void
 _eom_wayland_client_call_notify(EomWaylandOutput *eom_wl_output, eom_output_notify_type_e type)
 {
-	GValueArray *array = NULL;
+	GArray *array = NULL;
 	GValue v = G_VALUE_INIT;
 
-	array = g_value_array_new(0);
+	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 
 	/* 11 args 0: notify_type 1:output_id, 2:output_type, 3:output_mode, 4:w, 5:h, 6:w_mm, 7:h_mm, 8:pid, 9:attri, 10:state */
 	/* 0: notify_type */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, type);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 1:output_id */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->id);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 2:output_type */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, _convert_to_eom_output_type(eom_wl_output->eom_type));
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 3:output_mode */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, _convert_to_eom_output_mode(eom_wl_output->eom_mode));
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 4:w */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->width);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 5:h */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->height);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 6:w_mm */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->physical_width);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 7:h_mm */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->physical_height);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 8:pid */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->physical_width);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 9:attri */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, _convert_to_eom_output_attribute(eom_wl_output->eom_attribute));
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 10:state */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, _convert_to_eom_output_attribute_state(eom_wl_output->eom_attribute_state));
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	if (eom_wl_output->client_info->func)
 		eom_wl_output->client_info->func(NULL, array);
 
 	if (array)
-		g_value_array_free(array);
+		g_array_free(array, FALSE);
 
 }
 
@@ -692,10 +692,10 @@ eom_wayland_client_deinit(GList *cb_info_list)
 	memset(&wl_client_info, 0x0, sizeof(EomWaylandClientInfo));
 }
 
-GValueArray *
+GArray *
 eom_wayland_client_get_output_ids(void)
 {
-	GValueArray *array = NULL;
+	GArray *array = NULL;
 	GValue v = G_VALUE_INIT;
 	EomWaylandOutput *eom_wl_output = NULL;
 	EomWaylandOutput *tmp = NULL;
@@ -705,14 +705,14 @@ eom_wayland_client_get_output_ids(void)
 		return NULL;
 	}
 
-	array = g_value_array_new(0);
+	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 
 	/* remove all eom_wl_outputs */
 	wl_list_for_each_safe(eom_wl_output, tmp, &wl_client_info.eom_wl_output_list, link) {
 		if (eom_wl_output->output) {
 			g_value_init(&v, G_TYPE_INT);
 			g_value_set_int(&v, eom_wl_output->id);
-			array = g_value_array_append(array, &v);
+			array = g_array_append_val(array, v);
 			g_value_unset(&v);
 		}
 	}
@@ -721,69 +721,69 @@ eom_wayland_client_get_output_ids(void)
 	return array;
 }
 
-GValueArray *
+GArray *
 eom_wayland_client_get_output_info(eom_output_id output_id)
 {
-	GValueArray *array = NULL;
+	GArray *array = NULL;
 	GValue v = G_VALUE_INIT;
 	EomWaylandOutput *eom_wl_output = NULL;
 
 	eom_wl_output = _eom_wayland_client_find_output_from_eom_output(&wl_client_info.eom_wl_output_list, output_id);
 	RETV_IF_FAIL(eom_wl_output != NULL, NULL);
 
-	array = g_value_array_new(0);
+	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 
 	/* 0:output_id, 1:output_type, 2:output_mode, 3:w, 4:h, 5:w_mm, 6:h_mm */
 	/* 0:output_id */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->id);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 1:output_type */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->eom_type);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 2:output_mode */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->eom_mode);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 3:w */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->width);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 4:h */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->height);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 5:w_mm */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->physical_width);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* 6:h_mm */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->physical_height);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* returned array will be freed by caller */
 	return array;
 }
 
-GValueArray *
+GArray *
 eom_wayland_client_set_attribute(eom_output_id output_id, eom_output_attribute_e attr)
 {
-	GValueArray *array = NULL;
+	GArray *array = NULL;
 	GValue v = G_VALUE_INIT;
 	EomWaylandOutput *eom_wl_output = NULL;
 	int ret = 0;
@@ -799,10 +799,10 @@ eom_wayland_client_set_attribute(eom_output_id output_id, eom_output_attribute_e
 
 	ret = 1;
 
-	array = g_value_array_new(0);
+	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, ret);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* returned array will be freed by caller */
@@ -812,10 +812,10 @@ fail:
 	return NULL;
 }
 
-GValueArray *
+GArray *
 eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 {
-	GValueArray *array = NULL;
+	GArray *array = NULL;
 	GValue v = G_VALUE_INIT;
 	Ecore_Wl_Window *e_wl_win = NULL;
 	EomWaylandOutput *eom_wl_output = NULL;
@@ -847,10 +847,10 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 
 	ret = 1;
 
-	array = g_value_array_new(0);
+	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, ret);
-	array = g_value_array_append(array, &v);
+	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
 	/* returned array will be freed by caller */

@@ -86,24 +86,26 @@ _eom_dbus_need_private_conn(void)
 }
 
 static int
-_eom_dbus_convert_gvalue_to_message(GValueArray *array, DBusMessage *msg)
+_eom_dbus_convert_gvalue_to_message(GArray *array, DBusMessage *msg)
 {
 	DBusMessageIter iter;
+	GValue *v = NULL;
+	GType type;
 	int i;
 
 	if (!array)
 		return 1;
 
-	if (array->n_values <= 0)
+	if (array->len <= 0)
 		return 1;
 
 	dbus_message_iter_init_append(msg, &iter);
 
-	INFO("[EOM_CLIENT:%s] n_values(%d)", client_info.name, array->n_values);
+	INFO("[EOM_CLIENT:%s] len(%d)", client_info.name, array->len);
 
-	for (i = 0; i < array->n_values; i++) {
-		GValue *v = g_value_array_get_nth(array, i);
-		GType type = v->g_type;
+	for (i = 0; i < array->len; i++) {
+		v = &g_array_index(array, GValue, i);
+		type = v->g_type;
 
 		INFO("[EOM_CLIENT:%s] type(%d)", client_info.name, (int)type);
 
@@ -164,16 +166,16 @@ _eom_dbus_convert_gvalue_to_message(GValueArray *array, DBusMessage *msg)
 	return 1;
 }
 
-static GValueArray*
+static GArray*
 _eom_dbus_convert_message_to_gvalue(DBusMessage *msg)
 {
-	GValueArray *array;
+	GArray *array;
 	DBusMessageIter iter;
 
 	if (!dbus_message_iter_init(msg, &iter))
 		return NULL;
 
-	array = g_value_array_new(0);
+	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 
 	do {
 		int type = dbus_message_iter_get_arg_type(&iter);
@@ -188,7 +190,7 @@ _eom_dbus_convert_message_to_gvalue(DBusMessage *msg)
 				dbus_message_iter_get_basic(&iter, &integer);
 				g_value_init(&v, G_TYPE_INT);
 				g_value_set_int(&v, integer);
-				array = g_value_array_append(array, &v);
+				array = g_array_append_val(array, v);
 				g_value_unset(&v);
 			}
 			break;
@@ -198,7 +200,7 @@ _eom_dbus_convert_message_to_gvalue(DBusMessage *msg)
 				dbus_message_iter_get_basic(&iter, &uinteger);
 				g_value_init(&v, G_TYPE_UINT);
 				g_value_set_uint(&v, uinteger);
-				array = g_value_array_append(array, &v);
+				array = g_array_append_val(array, v);
 				g_value_unset(&v);
 			}
 			break;
@@ -208,13 +210,13 @@ _eom_dbus_convert_message_to_gvalue(DBusMessage *msg)
 				dbus_message_iter_get_basic(&iter, &string);
 				g_value_init(&v, G_TYPE_STRING);
 				g_value_set_string(&v, string);
-				array = g_value_array_append(array, &v);
+				array = g_array_append_val(array, v);
 				g_value_unset(&v);
 			}
 			break;
 		default:
 			NEVER_GET_HERE();
-			g_value_array_free(array);
+			g_array_free(array, FALSE);
 			return NULL;
 		}
 	} while (dbus_message_iter_has_next(&iter) && dbus_message_iter_next(&iter));
@@ -239,13 +241,13 @@ _eom_dbus_client_process_message(EomDBusClientInfo *info, DBusMessage *msg)
 		EomDBusClientMethod *method = *prev;
 
 		if (!strcmp(dbus_message_get_member(msg), method->name)) {
-			GValueArray *array = _eom_dbus_convert_message_to_gvalue(msg);
+			GArray *array = _eom_dbus_convert_message_to_gvalue(msg);
 
 			if (method->func)
 				method->func(method->data, array);
 
 			if (array)
-				g_value_array_free(array);
+				g_array_free(array, FALSE);
 
 			dbus_error_free(&err);
 
@@ -521,12 +523,12 @@ eom_dbus_client_deinit(GList *cb_info_list)
 	dbus_initialized = false;
 }
 
-GValueArray*
-eom_dbus_client_send_message(char *method, GValueArray *array)
+GArray*
+eom_dbus_client_send_message(char *method, GArray *array)
 {
 	DBusMessage *msg = NULL;
 	DBusMessage *reply_msg = NULL;
-	GValueArray *ret_array = NULL;
+	GArray *ret_array = NULL;
 	DBusError err;
 
 	RETV_IF_FAIL(client_info.conn != NULL, NULL);
@@ -571,10 +573,10 @@ err_send:
 }
 
 
-GValueArray *
+GArray *
 eom_dbus_client_get_output_ids(void)
 {
-	GValueArray *array = NULL;
+	GArray *array = NULL;
 
 	array = eom_dbus_client_send_message("GetOutputIDs", NULL);
 	RETV_IF_FAIL(array != NULL, NULL);
@@ -582,36 +584,36 @@ eom_dbus_client_get_output_ids(void)
 	return array;
 }
 
-GValueArray *
+GArray *
 eom_dbus_client_get_output_info(eom_output_id output_id)
 {
-	GValueArray *array = NULL;
-	GValueArray *msg_array;
+	GArray *array = NULL;
+	GArray *msg_array;
 	GValue v = G_VALUE_INIT;
 
-	msg_array = g_value_array_new(0);
+	msg_array = g_array_new(FALSE, FALSE, sizeof(GValue));
 
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, output_id);
-	msg_array = g_value_array_append(msg_array, &v);
+	msg_array = g_array_append_val(msg_array, v);
 
 	array = eom_dbus_client_send_message("GetOutputInfo", msg_array);
 	GOTO_IF_FAIL(array != NULL, fail);
 
-	g_value_array_free(msg_array);
+	g_array_free(msg_array, FALSE);
 
 	return array;
 fail:
-	g_value_array_free(msg_array);
+	g_array_free(msg_array, FALSE);
 
 	return NULL;
 }
 
-GValueArray *
+GArray *
 eom_dbus_client_set_attribute(eom_output_id output_id, eom_output_attribute_e attr)
 {
-	GValueArray *array = NULL;
-	GValueArray *msg_array;
+	GArray *array = NULL;
+	GArray *msg_array;
 	GValue v = G_VALUE_INIT;
 	int pid = 0;
 
@@ -619,34 +621,34 @@ eom_dbus_client_set_attribute(eom_output_id output_id, eom_output_attribute_e at
 
 	INFO("output_id: %d, pid: %d, attr: %d\n", output_id, pid, attr);
 
-	msg_array = g_value_array_new(0);
+	msg_array = g_array_new(FALSE, FALSE, sizeof(GValue));
 
 	/* 0:output_id, 1:pid, 2:eom_attribuete_e */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, output_id);
-	msg_array = g_value_array_append(msg_array, &v);
+	msg_array = g_array_append_val(msg_array, v);
 	g_value_set_int(&v, pid);
-	msg_array = g_value_array_append(msg_array, &v);
+	msg_array = g_array_append_val(msg_array, v);
 	g_value_set_int(&v, attr);
-	msg_array = g_value_array_append(msg_array, &v);
+	msg_array = g_array_append_val(msg_array, v);
 
 	array = eom_dbus_client_send_message("SetOutputAttribute", msg_array);
 	GOTO_IF_FAIL(array != NULL, fail);
 
-	g_value_array_free(msg_array);
+	g_array_free(msg_array, FALSE);
 
 	return array;
 fail:
-	g_value_array_free(msg_array);
+	g_array_free(msg_array, FALSE);
 
 	return NULL;
 }
 
-GValueArray *
+GArray *
 eom_dbus_client_set_window(eom_output_id output_id, Evas_Object *win)
 {
-	GValueArray *array = NULL;
-	GValueArray *msg_array;
+	GArray *array = NULL;
+	GArray *msg_array;
 	GValue v = G_VALUE_INIT;
 	int pid = 0;
 	Ecore_X_Window xwin;
@@ -657,23 +659,23 @@ eom_dbus_client_set_window(eom_output_id output_id, Evas_Object *win)
 
 	INFO("output_id: %d, pid: %d, xwin: %d\n", output_id, pid, xwin);
 
-	msg_array = g_value_array_new(0);
+	msg_array = g_array_new(FALSE, FALSE, sizeof(GValue));
 
 	/* 0:output_id, 1:pid, 2:eom_attribuete_e */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, output_id);
-	msg_array = g_value_array_append(msg_array, &v);
+	msg_array = g_array_append_val(msg_array, v);
 	g_value_set_int(&v, pid);
-	msg_array = g_value_array_append(msg_array, &v);
+	msg_array = g_array_append_val(msg_array, v);
 	g_value_set_int(&v, xwin);
-	msg_array = g_value_array_append(msg_array, &v);
+	msg_array = g_array_append_val(msg_array, v);
 
 	array = eom_dbus_client_send_message("SetWindow", msg_array);
 	RETV_IF_FAIL(array != NULL, NULL);
 
-	g_value_array_free(msg_array);
+	g_array_free(msg_array, FALSE);
 
-	ret = g_value_get_int(g_value_array_get_nth(array, 0));
+	ret = g_value_get_int(&g_array_index(array, GValue, 0));
 	GOTO_IF_FAIL(ret != 0, fail);
 
 #ifdef HAVE_TIZEN_2_X
@@ -684,7 +686,7 @@ eom_dbus_client_set_window(eom_output_id output_id, Evas_Object *win)
 
 	return array;
 fail:
-	g_value_array_free(msg_array);
+	g_array_free(msg_array, FALSE);
 
 	return NULL;
 }
