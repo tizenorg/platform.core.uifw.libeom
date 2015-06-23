@@ -41,13 +41,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 typedef struct _EomWaylandClientInfo {
 	/* wl */
-    struct wl_display *display;
-    struct wl_registry *registry;
+	struct wl_display *display;
+	struct wl_registry *registry;
 
-    struct wl_eom *eom;
+	struct wl_eom *eom;
 
-    /* eom wayland output list */
-    struct wl_list eom_wl_output_list;
+	/* eom wayland output list */
+	struct wl_list eom_wl_output_list;
 	int num_outputs;
 
 	notify_func func;
@@ -94,63 +94,62 @@ static eom_output_type_e
 _convert_to_eom_output_type(enum wl_eom_type eom_type)
 {
 	eom_output_type_e output_type = EOM_OUTPUT_TYPE_UNKNOWN;
-	switch (eom_type)
-	{
-		case WL_EOM_TYPE_NONE:
-			output_type = EOM_OUTPUT_TYPE_UNKNOWN;
-			break;
-		case WL_EOM_TYPE_VGA:
-			output_type = EOM_OUTPUT_TYPE_VGA;
-			break;
-		case WL_EOM_TYPE_DIVI:
-			output_type = EOM_OUTPUT_TYPE_DVII;;
-			break;
-		case WL_EOM_TYPE_DIVD:
-			output_type = EOM_OUTPUT_TYPE_DVID;
-			break;
-		case WL_EOM_TYPE_DIVA:
-			output_type = EOM_OUTPUT_TYPE_DVIA;
-			break;
-		case WL_EOM_TYPE_COMPOSITE:
-			output_type = EOM_OUTPUT_TYPE_COMPOSITE;
-			break;
-		case WL_EOM_TYPE_SVIDEO:
-			output_type = EOM_OUTPUT_TYPE_SVIDEO;
-			break;
-		case WL_EOM_TYPE_LVDS:
-			output_type = EOM_OUTPUT_TYPE_LVDS;
-			break;
-		case WL_EOM_TYPE_COMPONENT:
-			output_type = EOM_OUTPUT_TYPE_COMPONENT;
-			break;
-		case WL_EOM_TYPE_9PINDIN:
-			output_type = EOM_OUTPUT_TYPE_9PINDIN;
-			break;
-		case WL_EOM_TYPE_DISPLAYPORT:
-			output_type = EOM_OUTPUT_TYPE_DISPLAYPORT;
-			break;
-		case WL_EOM_TYPE_HDMIA:
-			output_type = EOM_OUTPUT_TYPE_HDMIA;
-			break;
-		case WL_EOM_TYPE_HDMIB:
-			output_type = EOM_OUTPUT_TYPE_HDMIB;
-			break;
-		case WL_EOM_TYPE_TV:
-			output_type = EOM_OUTPUT_TYPE_TV;
-			break;
-		case WL_EOM_TYPE_EDP:
-			output_type = EOM_OUTPUT_TYPE_EDP;
-			break;
-		case WL_EOM_TYPE_VIRTUAL:
-			output_type = EOM_OUTPUT_TYPE_VIRTUAL;
-			break;
-		case WL_EOM_TYPE_DSI:
-			output_type = EOM_OUTPUT_TYPE_DSI;
-			break;
-		default:
-			ERR("no type.");
-			break;
-	  }
+	switch (eom_type) {
+	case WL_EOM_TYPE_NONE:
+		output_type = EOM_OUTPUT_TYPE_UNKNOWN;
+		break;
+	case WL_EOM_TYPE_VGA:
+		output_type = EOM_OUTPUT_TYPE_VGA;
+		break;
+	case WL_EOM_TYPE_DIVI:
+		output_type = EOM_OUTPUT_TYPE_DVII;;
+		break;
+	case WL_EOM_TYPE_DIVD:
+		output_type = EOM_OUTPUT_TYPE_DVID;
+		break;
+	case WL_EOM_TYPE_DIVA:
+		output_type = EOM_OUTPUT_TYPE_DVIA;
+		break;
+	case WL_EOM_TYPE_COMPOSITE:
+		output_type = EOM_OUTPUT_TYPE_COMPOSITE;
+		break;
+	case WL_EOM_TYPE_SVIDEO:
+		output_type = EOM_OUTPUT_TYPE_SVIDEO;
+		break;
+	case WL_EOM_TYPE_LVDS:
+		output_type = EOM_OUTPUT_TYPE_LVDS;
+		break;
+	case WL_EOM_TYPE_COMPONENT:
+		output_type = EOM_OUTPUT_TYPE_COMPONENT;
+		break;
+	case WL_EOM_TYPE_9PINDIN:
+		output_type = EOM_OUTPUT_TYPE_9PINDIN;
+		break;
+	case WL_EOM_TYPE_DISPLAYPORT:
+		output_type = EOM_OUTPUT_TYPE_DISPLAYPORT;
+		break;
+	case WL_EOM_TYPE_HDMIA:
+		output_type = EOM_OUTPUT_TYPE_HDMIA;
+		break;
+	case WL_EOM_TYPE_HDMIB:
+		output_type = EOM_OUTPUT_TYPE_HDMIB;
+		break;
+	case WL_EOM_TYPE_TV:
+		output_type = EOM_OUTPUT_TYPE_TV;
+		break;
+	case WL_EOM_TYPE_EDP:
+		output_type = EOM_OUTPUT_TYPE_EDP;
+		break;
+	case WL_EOM_TYPE_VIRTUAL:
+		output_type = EOM_OUTPUT_TYPE_VIRTUAL;
+		break;
+	case WL_EOM_TYPE_DSI:
+		output_type = EOM_OUTPUT_TYPE_DSI;
+		break;
+	default:
+		ERR("no type.");
+		break;
+	}
 
 	return output_type;
 }
@@ -159,20 +158,19 @@ static eom_output_mode_e
 _convert_to_eom_output_mode(enum wl_eom_mode eom_mode)
 {
 	eom_output_mode_e output_mode = EOM_OUTPUT_MODE_NONE;
-	switch (eom_mode)
-	{
-		case WL_EOM_MODE_NONE:
-			output_mode = EOM_OUTPUT_MODE_NONE;
-			break;
-		case WL_EOM_MODE_MIRROR:
-			output_mode = EOM_OUTPUT_MODE_MIRROR;
-			break;
-		case WL_EOM_MODE_PRESENTATION:
-			output_mode = EOM_OUTPUT_MODE_PRESENTATION;
-			break;
-		default:
-			ERR("no mode.");
-			break;
+	switch (eom_mode) {
+	case WL_EOM_MODE_NONE:
+		output_mode = EOM_OUTPUT_MODE_NONE;
+		break;
+	case WL_EOM_MODE_MIRROR:
+		output_mode = EOM_OUTPUT_MODE_MIRROR;
+		break;
+	case WL_EOM_MODE_PRESENTATION:
+		output_mode = EOM_OUTPUT_MODE_PRESENTATION;
+		break;
+	default:
+		ERR("no mode.");
+		break;
 	}
 
 	return output_mode;
@@ -182,23 +180,22 @@ static eom_output_attribute_e
 _convert_to_eom_output_attribute(enum wl_eom_attribute eom_attribute)
 {
 	eom_output_attribute_e output_attribute = EOM_OUTPUT_ATTRIBUTE_NONE;
-	switch (eom_attribute)
-	{
-		case WL_EOM_ATTRIBUTE_NONE:
-			output_attribute = EOM_OUTPUT_ATTRIBUTE_NONE;
-			break;
-		case WL_EOM_ATTRIBUTE_NORMAL:
-			output_attribute = EOM_OUTPUT_ATTRIBUTE_NORMAL;
-			break;
-		case WL_EOM_ATTRIBUTE_EXCLUSIVE_SHARED:
-			output_attribute = EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE_SHARE;
-			break;
-		case WL_EOM_ATTRIBUTE_EXCLUSIVE:
-			output_attribute = EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE;
-			break;
-		default:
-			ERR("no attribute.");
-			break;
+	switch (eom_attribute) {
+	case WL_EOM_ATTRIBUTE_NONE:
+		output_attribute = EOM_OUTPUT_ATTRIBUTE_NONE;
+		break;
+	case WL_EOM_ATTRIBUTE_NORMAL:
+		output_attribute = EOM_OUTPUT_ATTRIBUTE_NORMAL;
+		break;
+	case WL_EOM_ATTRIBUTE_EXCLUSIVE_SHARED:
+		output_attribute = EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE_SHARE;
+		break;
+	case WL_EOM_ATTRIBUTE_EXCLUSIVE:
+		output_attribute = EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE;
+		break;
+	default:
+		ERR("no attribute.");
+		break;
 	}
 
 	return output_attribute;
@@ -208,23 +205,22 @@ static eom_output_attribute_state_e
 _convert_to_eom_output_attribute_state(enum wl_eom_attribute_state eom_attribute_state)
 {
 	eom_output_attribute_state_e output_attribute_state = EOM_OUTPUT_ATTRIBUTE_STATE_NONE;
-	switch (eom_attribute_state)
-	{
-		case WL_EOM_ATTRIBUTE_STATE_NONE:
-			output_attribute_state = EOM_OUTPUT_ATTRIBUTE_STATE_NONE;
-			break;
-		case WL_EOM_ATTRIBUTE_STATE_ACTIVE:
-			output_attribute_state = EOM_OUTPUT_ATTRIBUTE_STATE_ACTIVE;
-			break;
-		case WL_EOM_ATTRIBUTE_STATE_INACTIVE:
-			output_attribute_state = EOM_OUTPUT_ATTRIBUTE_STATE_INACTIVE;
-			break;
-		case WL_EOM_ATTRIBUTE_STATE_LOST:
-			output_attribute_state = EOM_OUTPUT_ATTRIBUTE_STATE_LOST;
-			break;
-		default:
-			ERR("no attribute state.");
-			break;
+	switch (eom_attribute_state) {
+	case WL_EOM_ATTRIBUTE_STATE_NONE:
+		output_attribute_state = EOM_OUTPUT_ATTRIBUTE_STATE_NONE;
+		break;
+	case WL_EOM_ATTRIBUTE_STATE_ACTIVE:
+		output_attribute_state = EOM_OUTPUT_ATTRIBUTE_STATE_ACTIVE;
+		break;
+	case WL_EOM_ATTRIBUTE_STATE_INACTIVE:
+		output_attribute_state = EOM_OUTPUT_ATTRIBUTE_STATE_INACTIVE;
+		break;
+	case WL_EOM_ATTRIBUTE_STATE_LOST:
+		output_attribute_state = EOM_OUTPUT_ATTRIBUTE_STATE_LOST;
+		break;
+	default:
+		ERR("no attribute state.");
+		break;
 	}
 
 	return output_attribute_state;
@@ -234,23 +230,22 @@ static enum wl_eom_attribute
 _convert_to_wl_eom_attribute(eom_output_attribute_e attr)
 {
 	enum wl_eom_attribute eom_attribute = WL_EOM_ATTRIBUTE_NONE;
-	switch (attr)
-	{
-		case EOM_OUTPUT_ATTRIBUTE_NONE:
-			eom_attribute = WL_EOM_ATTRIBUTE_NONE;
-			break;
-		case EOM_OUTPUT_ATTRIBUTE_NORMAL:
-			eom_attribute = WL_EOM_ATTRIBUTE_NORMAL;
-			break;
-		case EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE_SHARE:
-			eom_attribute = WL_EOM_ATTRIBUTE_EXCLUSIVE_SHARED;
-			break;
-		case EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE:
-			eom_attribute = WL_EOM_ATTRIBUTE_EXCLUSIVE;
-			break;
-		default:
-			ERR("no wl attribute.");
-			break;
+	switch (attr) {
+	case EOM_OUTPUT_ATTRIBUTE_NONE:
+		eom_attribute = WL_EOM_ATTRIBUTE_NONE;
+		break;
+	case EOM_OUTPUT_ATTRIBUTE_NORMAL:
+		eom_attribute = WL_EOM_ATTRIBUTE_NORMAL;
+		break;
+	case EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE_SHARE:
+		eom_attribute = WL_EOM_ATTRIBUTE_EXCLUSIVE_SHARED;
+		break;
+	case EOM_OUTPUT_ATTRIBUTE_EXCLUSIVE:
+		eom_attribute = WL_EOM_ATTRIBUTE_EXCLUSIVE;
+		break;
+	default:
+		ERR("no wl attribute.");
+		break;
 	}
 
 	return eom_attribute;
@@ -384,20 +379,20 @@ _eom_wayland_client_find_output_from_eom_output(struct wl_list *eom_wl_output_li
 
 static void
 _eom_wl_output_handle_geometry(void *data,
-         struct wl_output *wl_output,
-         int32_t x,
-         int32_t y,
-         int32_t physical_width,
-         int32_t physical_height,
-         int32_t subpixel,
-         const char *make,
-         const char *model,
-         int32_t transform)
+			struct wl_output *wl_output,
+			int32_t x,
+			int32_t y,
+			int32_t physical_width,
+			int32_t physical_height,
+			int32_t subpixel,
+			const char *make,
+			const char *model,
+			int32_t transform)
 {
 	EomWaylandOutput *eom_wl_output = (EomWaylandOutput *) data;
 
-    INFO("wl_output:%p x:%d y:%d phy_w:%d phy_h:%d subpixel:%d make:%s model:%s transform:%d\n",
-        wl_output, x, y, physical_width, physical_height, subpixel, make, model, transform);
+	INFO("wl_output:%p x:%d y:%d phy_w:%d phy_h:%d subpixel:%d make:%s model:%s transform:%d\n",
+		wl_output, x, y, physical_width, physical_height, subpixel, make, model, transform);
 
 	/* save vaules if it is different before */
 	if (eom_wl_output->x != x)
@@ -418,16 +413,16 @@ _eom_wl_output_handle_geometry(void *data,
 
 static void
 _eom_wl_output_handle_mode(void *data,
-         struct wl_output *wl_output,
-         uint32_t flags,
-         int32_t width,
-         int32_t height,
-         int32_t refresh)
+			struct wl_output *wl_output,
+			uint32_t flags,
+			int32_t width,
+			int32_t height,
+			int32_t refresh)
 {
 	EomWaylandOutput *eom_wl_output = (EomWaylandOutput *) data;
 
-    INFO("wl_output:%p flags:%d width:%d height:%d refresh:%d\n",
-        wl_output, flags, width, height, refresh);
+	INFO("wl_output:%p flags:%d width:%d height:%d refresh:%d\n",
+		wl_output, flags, width, height, refresh);
 
 	/* save vaules if it is different before */
 	if (eom_wl_output->flags != flags)
@@ -442,31 +437,30 @@ _eom_wl_output_handle_mode(void *data,
 
 static void
 _eom_wl_output_handle_done(void *data,
-         struct wl_output *wl_output)
+			struct wl_output *wl_output)
 {
-    INFO("wl_output:%p\n", wl_output);
+	INFO("wl_output:%p\n", wl_output);
 }
 
 static void
 _eom_wl_output_handle_scale(void *data,
-          struct wl_output *wl_output,
-          int32_t factor)
+			struct wl_output *wl_output,
+			int32_t factor)
 {
 	EomWaylandOutput *eom_wl_output = (EomWaylandOutput *) data;
 
-    INFO("wl_output:%p factor:%d\n", wl_output, factor);
+	INFO("wl_output:%p factor:%d\n", wl_output, factor);
 
 	/* save vaules if it is different before */
 	if (eom_wl_output->factor != factor)
 		eom_wl_output->factor = factor;
 }
 
-static const struct wl_output_listener eom_wl_output_listener =
-{
-    _eom_wl_output_handle_geometry,
-    _eom_wl_output_handle_mode,
-    _eom_wl_output_handle_done,
-    _eom_wl_output_handle_scale,
+static const struct wl_output_listener eom_wl_output_listener = {
+	_eom_wl_output_handle_geometry,
+	_eom_wl_output_handle_mode,
+	_eom_wl_output_handle_done,
+	_eom_wl_output_handle_scale,
 };
 
 static void
@@ -490,11 +484,10 @@ _eom_wl_eom_output_type(void *data,
 	if (eom_wl_output->eom_status != status) {
 		eom_wl_output->eom_status = status;
 
-		if (status == WL_EOM_STATUS_CONNECTION) {
+		if (status == WL_EOM_STATUS_CONNECTION)
 			_eom_wayland_client_call_notify(eom_wl_output, EOM_OUTPUT_NOTIFY_ADD);
-		} else if (status == WL_EOM_STATUS_DISCONNECTION) {
+		else if (status == WL_EOM_STATUS_DISCONNECTION)
 			_eom_wayland_client_call_notify(eom_wl_output, EOM_OUTPUT_NOTIFY_REMOVE);
-		}
 	}
 }
 
@@ -542,11 +535,10 @@ _eom_wl_eom_output_attribute(void *data,
 }
 
 
-static const struct wl_eom_listener eom_wl_eom_listener =
-{
-    _eom_wl_eom_output_type,
-    _eom_wl_eom_output_mode,
-    _eom_wl_eom_output_attribute,
+static const struct wl_eom_listener eom_wl_eom_listener = {
+	_eom_wl_eom_output_type,
+	_eom_wl_eom_output_mode,
+	_eom_wl_eom_output_attribute,
 };
 
 
@@ -558,29 +550,29 @@ _eom_wl_registry_handle_global(void *data, struct wl_registry *registry, uint32_
 	struct wl_output *output = NULL;
 	struct wl_eom *eom = NULL;
 
-    if (strcmp(interface, "wl_output") == 0) {
-        output = wl_registry_bind(registry, name, &wl_output_interface, 1);
-        if (!output)
-            ERR("Error. fail to bind  %s.\n", interface);
-        else {
-            INFO("bind %s.\n", interface);
+	if (strcmp(interface, "wl_output") == 0) {
+		output = wl_registry_bind(registry, name, &wl_output_interface, 1);
+		if (!output)
+			ERR("Error. fail to bind  %s.\n", interface);
+		else {
+			INFO("bind %s.\n", interface);
 
 			/* create the eom_wl_output */
-            eom_wl_output = calloc(1, sizeof(EomWaylandOutput));
-            if (!eom_wl_output) {
+			eom_wl_output = calloc(1, sizeof(EomWaylandOutput));
+			if (!eom_wl_output) {
 				ERR("error. fail to allocate the eom_output.\n");
 				return;
-            }
+			}
 			ci->num_outputs++;
 			eom_wl_output->id = ci->num_outputs;
-            eom_wl_output->output = output;
-            wl_list_insert(&ci->eom_wl_output_list, &eom_wl_output->link);
+			eom_wl_output->output = output;
+			wl_list_insert(&ci->eom_wl_output_list, &eom_wl_output->link);
 
 			/* add listener */
-	        wl_output_add_listener(eom_wl_output->output, &eom_wl_output_listener, eom_wl_output);
-        }
-    } else if (strcmp(interface, "wl_eom")== 0) {
-        eom = wl_registry_bind(registry, name, &wl_eom_interface, 1);
+			wl_output_add_listener(eom_wl_output->output, &eom_wl_output_listener, eom_wl_output);
+		}
+	} else if (strcmp(interface, "wl_eom") == 0) {
+		eom = wl_registry_bind(registry, name, &wl_eom_interface, 1);
 		if (!eom)
 			ERR("Error. fail to bind  %s.\n", interface);
 		else {
@@ -589,11 +581,10 @@ _eom_wl_registry_handle_global(void *data, struct wl_registry *registry, uint32_
 			ci->eom = eom;
 
 			/* add listener */
-	        wl_eom_add_listener(ci->eom, &eom_wl_eom_listener, ci);
+			wl_eom_add_listener(ci->eom, &eom_wl_eom_listener, ci);
 		}
-    } else {
-        INFO("Not bind %s.\n", interface);
-    }
+	} else
+		INFO("Not bind %s.\n", interface);
 }
 
 static void
@@ -602,38 +593,36 @@ _eom_wl_registry_handle_global_remove(void *data, struct wl_registry *registry, 
 
 }
 
-static const struct wl_registry_listener eom_registry_listener =
-{
-    _eom_wl_registry_handle_global,
-    _eom_wl_registry_handle_global_remove
+static const struct wl_registry_listener eom_registry_listener = {
+	_eom_wl_registry_handle_global,
+	_eom_wl_registry_handle_global_remove
 };
 
 static bool
 _eom_wayland_client_initialize()
 {
-    int ecore_count = -1;
+	int ecore_count = -1;
 
-    ecore_count = ecore_wl_init(NULL);
-    GOTO_IF_FAIL(ecore_count > 0, fail);
+	ecore_count = ecore_wl_init(NULL);
+	GOTO_IF_FAIL(ecore_count > 0, fail);
 
 	wl_list_init(&wl_client_info.eom_wl_output_list);
 
-    wl_client_info.display = ecore_wl_display_get();
-    GOTO_IF_FAIL(wl_client_info.display != NULL, fail);
+	wl_client_info.display = ecore_wl_display_get();
+	GOTO_IF_FAIL(wl_client_info.display != NULL, fail);
 
-    /* get the registry */
-    wl_client_info.registry = wl_display_get_registry(wl_client_info.display);
-    GOTO_IF_FAIL(wl_client_info.registry != NULL, fail);
+	/* get the registry */
+	wl_client_info.registry = wl_display_get_registry(wl_client_info.display);
+	GOTO_IF_FAIL(wl_client_info.registry != NULL, fail);
 
-    /* get the global objects */
-    wl_registry_add_listener(wl_client_info.registry, &eom_registry_listener, &wl_client_info);
-    wl_display_dispatch(wl_client_info.display);
-    wl_display_roundtrip(wl_client_info.display);
+	/* get the global objects */
+	wl_registry_add_listener(wl_client_info.registry, &eom_registry_listener, &wl_client_info);
+	wl_display_dispatch(wl_client_info.display);
+	wl_display_roundtrip(wl_client_info.display);
 
-    /* output list */
-    if (wl_list_empty(&wl_client_info.eom_wl_output_list)) {
+	/* output list */
+	if (wl_list_empty(&wl_client_info.eom_wl_output_list))
 		WARN("[EOM_CLIENT] no wl output at this device.\n");
-    }
 
 	INFO("[EOM_CLIENT] wayland client init.");
 
@@ -658,7 +647,7 @@ _eom_wayland_client_deinitialize()
 		}
 	}
 
-    ecore_wl_shutdown();
+	ecore_wl_shutdown();
 
 	INFO("[EOM_CLIENT] wayland client deinit.");
 }
@@ -666,12 +655,12 @@ _eom_wayland_client_deinitialize()
 bool
 eom_wayland_client_init(notify_func func)
 {
-    bool ret = false;
+	bool ret = false;
 
-    if (eom_wayland_init) return true;
+	if (eom_wayland_init) return true;
 
-    ret = _eom_wayland_client_initialize();
-    GOTO_IF_FAIL(ret != true, fail);
+	ret = _eom_wayland_client_initialize();
+	GOTO_IF_FAIL(ret != true, fail);
 
 	wl_client_info.func = func;
 
@@ -794,8 +783,8 @@ eom_wayland_client_set_attribute(eom_output_id output_id, eom_output_attribute_e
 	wl_eom_set_attribute(wl_client_info.eom, eom_wl_output->output, _convert_to_wl_eom_attribute(attr));
 
 	/* TODO: wait for the result of set_attribute. this should be the blocking call. */
-    wl_display_dispatch(wl_client_info.display);
-    wl_display_roundtrip(wl_client_info.display);
+	wl_display_dispatch(wl_client_info.display);
+	wl_display_roundtrip(wl_client_info.display);
 
 	ret = 1;
 
@@ -819,8 +808,8 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 	GValue v = G_VALUE_INIT;
 	Ecore_Wl_Window *e_wl_win = NULL;
 	EomWaylandOutput *eom_wl_output = NULL;
-	struct wl_shell_surface * shell_surface = NULL;
-	struct xdg_surface * xdg_shell_surface = NULL;
+	struct wl_shell_surface *shell_surface = NULL;
+	struct xdg_surface *xdg_shell_surface = NULL;
 	int ret = 0;
 
 	e_wl_win = elm_win_wl_window_get(win);
