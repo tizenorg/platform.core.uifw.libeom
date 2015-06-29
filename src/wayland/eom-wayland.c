@@ -660,7 +660,7 @@ eom_wayland_client_init(notify_func func)
 	if (eom_wayland_init) return true;
 
 	ret = _eom_wayland_client_initialize();
-	GOTO_IF_FAIL(ret != true, fail);
+	GOTO_IF_FAIL(ret != false, fail);
 
 	wl_client_info.func = func;
 
