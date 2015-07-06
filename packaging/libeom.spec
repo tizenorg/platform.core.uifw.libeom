@@ -8,7 +8,6 @@ Release: 1
 Group: Graphics/X Window System
 License: MIT
 Source0: %{name}-%{version}.tar.gz
-Source1001: 	libeom.manifest
 
 %if %{with wayland}
 BuildRequires:  pkgconfig(wayland-client)
@@ -36,7 +35,6 @@ External Output Manager Library development package
 
 %prep
 %setup -q
-cp %{SOURCE1001} .
 
 %build
 export CFLAGS="-g -O0 -Wall -Werror -Wno-error=deprecated-declarations"
@@ -62,13 +60,11 @@ cp -af COPYING %{buildroot}/usr/share/license/%{name}
 %remove_docs
 
 %files
-%manifest %{name}.manifest
 %defattr(-,root,root,-)
 /usr/share/license/%{name}
 %{_libdir}/libeom.so.*
 
 %files devel
-%manifest %{name}.manifest
 %dir %{_includedir}/eom/
 %{_includedir}/eom/*.h
 %{_libdir}/libeom.so
