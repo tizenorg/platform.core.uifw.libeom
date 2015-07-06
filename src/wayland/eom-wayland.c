@@ -674,6 +674,9 @@ fail:
 void
 eom_wayland_client_deinit(GList *cb_info_list)
 {
+	if (!eom_wayland_init)
+		return;
+
 	_eom_wayland_client_deinitialize();
 
 	eom_wayland_init = 0;
