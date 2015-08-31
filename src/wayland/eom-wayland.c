@@ -620,6 +620,22 @@ _eom_wayland_client_initialize()
 	wl_display_dispatch(wl_client_info.display);
 	wl_display_roundtrip(wl_client_info.display);
 
+	/* remove type none eom_wl_outputs */
+	if (!wl_list_empty(&wl_client_info.eom_wl_output_list)) {
+		EomWaylandOutput *eom_wl_output = NULL;
+		EomWaylandOutput *tmp = NULL;
+
+		wl_list_for_each_safe(eom_wl_output, tmp, &wl_client_info.eom_wl_output_list, link) {
+			if (eom_wl_output->eom_type == WL_EOM_TYPE_NONE) {
+				WARN("[EOM_CLIENT] eom_type is NONE. remove.\n");
+				wl_output_destroy(eom_wl_output->output);
+				wl_list_remove(&eom_wl_output->link);
+				free(eom_wl_output);
+				eom_wl_output = NULL;
+			}
+		}
+	}
+
 	/* output list */
 	if (wl_list_empty(&wl_client_info.eom_wl_output_list))
 		WARN("[EOM_CLIENT] no wl output at this device.\n");

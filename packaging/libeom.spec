@@ -3,7 +3,7 @@
 
 Name: libeom
 Summary: External Output Manager Library
-Version: 1.0.1
+Version: 1.0.2
 Release: 1
 Group: Graphics/X Window System
 License: MIT
