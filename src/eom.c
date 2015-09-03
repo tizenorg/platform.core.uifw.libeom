@@ -309,7 +309,7 @@ _eom_output_process_notify_cb(void *data, GArray *array)
 	RET_IF_FAIL(array != NULL);
 	RET_IF_FAIL(array->len == 11);
 
-	/* 11 args 0: notify_type 1:output_id, 2:output_type, 3:output_mode, 4:w, 5:h, 6:w_mm, 7:h_mm, 8:pid, 9:attri, 10:state */
+	/* 11 args 0: notify_type 1:output_id, 2:output_type, 3:output_mode, 4:w, 5:h, 6:w_mm, 7:h_mm, 8:pid, 9:attri 10:state */
 	v = &g_array_index(array, GValue, 0);
 	notify_type = g_value_get_int(v);
 	v = &g_array_index(array, GValue, 1);
@@ -406,6 +406,9 @@ _eom_output_process_notify_cb(void *data, GArray *array)
 				_eom_mutex_unlock();
 				_eom_output_call_notify_cb(&notify);
 				_eom_mutex_lock();
+
+				if (state == EOM_OUTPUT_ATTRIBUTE_STATE_LOST)
+					_eom_set_output_attribute_state(output_info, EOM_OUTPUT_ATTRIBUTE_STATE_NONE);
 			}
 		}
 		break;
@@ -587,7 +590,7 @@ eom_get_eom_output_ids(int *count)
 		ret_array = eom_dbus_client_get_output_info(output_id);
 #endif
 		if (ret_array) {
-			/* 0:output_id, 1:output_type, 2:output_mode, 3:w, 4:h, 5:w_mm, 6:h_mm */
+			/* 0:output_id, 1:output_type, 2:output_mode, 3:w, 4:h, 5:w_mm, 6:h_mm, 7:attribute */
 			output_info = _eom_alloc_output_info(g_value_get_int(&g_array_index(ret_array, GValue, 0)),
 												  g_value_get_int(&g_array_index(ret_array, GValue, 1)));
 			if (output_info) {
@@ -597,6 +600,7 @@ eom_get_eom_output_ids(int *count)
 														g_value_get_int(&g_array_index(ret_array, GValue, 4)));
 				_eom_set_output_info_phy_size(output_info, g_value_get_int(&g_array_index(ret_array, GValue, 5)),
 															g_value_get_int(&g_array_index(ret_array, GValue, 6)));
+				_eom_set_output_attribute(output_info, g_value_get_int(&g_array_index(ret_array, GValue, 7)));
 				INFO("GetOutputInfo: %s(%d)", TYPE(output_info->type), output_info->id);
 			}
 
@@ -926,6 +930,9 @@ eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e attr)
 	g_array_free(ret_array, FALSE);
 
 	INFO("SetOutputAttribute: %s", (ret) ? "success" : "failed");
+
+	if (ret)
+		_eom_set_output_attribute(output_info, attr);
 
 	_eom_mutex_unlock();
 
