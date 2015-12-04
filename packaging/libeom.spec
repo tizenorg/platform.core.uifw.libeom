@@ -13,6 +13,7 @@ Source1001:	%name.manifest
 %if %{with wayland}
 BuildRequires:  pkgconfig(wayland-client)
 BuildRequires:  pkgconfig(ecore-wayland)
+BuildRequires:  pkgconfig(xdg-shell-client)
 %else
 %endif
 BuildRequires:  pkgconfig(dlog)

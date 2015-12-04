@@ -51,7 +51,6 @@ libeom_la_CFLAGS += \
 	-I$(top_srcdir)/src/wayland/protocol
 
 libeom_la_SOURCES += \
-	wayland/protocol/xdg-shell-protocol.c \
 	wayland/protocol/eom-protocol.c \
 	wayland/eom-wayland.c
 endif
