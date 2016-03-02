@@ -1,34 +1,35 @@
 /**************************************************************************
-
-eom (external output manager)
-
-Copyright 2014 Samsung Electronics co., Ltd. All Rights Reserved.
-
-Contact:
-SooChan Lim <sc1.lim@samsung.com>
-Boram Park <boram1288.park@samsung.com>
-Changyeon Lee <cyeon.lee@samsung.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sub license, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice (including the
-next paragraph) shall be included in all copies or substantial portions
-of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
-IN NO EVENT SHALL PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR
-ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+ *
+ * eom (external output manager)
+ *
+ * Copyright 2014 Samsung Electronics co., Ltd. All Rights Reserved.
+ *
+ * Contact:
+ * SooChan Lim <sc1.lim@samsung.com>
+ * Boram Park <boram1288.park@samsung.com>
+ * Changyeon Lee <cyeon.lee@samsung.com>
+ * JunKyeong Kim <jk0430.kim@samsung.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sub license, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice (including the
+ * next paragraph) shall be included in all copies or substantial portions
+ * of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
+ * IN NO EVENT SHALL PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR
+ * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
 **************************************************************************/
 
 #include <config.h>
@@ -111,52 +112,61 @@ _eom_dbus_convert_gvalue_to_message(GArray *array, DBusMessage *msg)
 
 		switch (type) {
 		case G_TYPE_INT:
-			{
-				int integer = g_value_get_int(v);
+		{
+			int integer = g_value_get_int(v);
 
-				if (!dbus_message_iter_append_basic(&iter, DBUS_TYPE_INT32, &integer)) {
-					ERR("[EOM_CLIENT:%s] failed: int append", client_info.name);
-					return 0;
-				}
+			if (!dbus_message_iter_append_basic(&iter,
+				DBUS_TYPE_INT32, &integer)) {
+				ERR("[EOM_CLIENT:%s] failed: int append",
+					client_info.name);
+				return 0;
 			}
+		}
 			break;
 		case G_TYPE_UINT:
-			{
-				unsigned int uinteger = g_value_get_uint(v);
+		{
+			unsigned int uinteger = g_value_get_uint(v);
 
-				if (!dbus_message_iter_append_basic(&iter, DBUS_TYPE_UINT32, &uinteger)) {
-					ERR("[EOM_CLIENT:%s] failed: uint append", client_info.name);
-					return 0;
-				}
+			if (!dbus_message_iter_append_basic(&iter,
+				DBUS_TYPE_UINT32, &uinteger)) {
+				ERR("[EOM_CLIENT:%s] failed: uint append",
+					client_info.name);
+				return 0;
 			}
+		}
 			break;
 		case G_TYPE_STRING:
-			{
-				char *string = (char *)g_value_get_string(v);
+		{
+			char *string = (char *)g_value_get_string(v);
 
-				if (!dbus_message_iter_append_basic(&iter, DBUS_TYPE_STRING, (void *)&string)) {
-					ERR("[EOM_CLIENT:%s] failed: uint append", client_info.name);
-					return 0;
-				}
+			if (!dbus_message_iter_append_basic(&iter,
+				DBUS_TYPE_STRING, (void *)&string)) {
+				ERR("[EOM_CLIENT:%s] failed: uint append",
+					client_info.name);
+				return 0;
 			}
+		}
 			break;
 		case G_TYPE_VARIANT:
-			{
-				GVariant *variant = g_value_get_variant(v);
-				int data_size = g_variant_get_size(variant);
-				void *data = (void *)g_variant_get_data(variant);
-				DBusMessageIter sub;
+		{
+			GVariant *variant = g_value_get_variant(v);
+			int data_size = g_variant_get_size(variant);
+			void *data = (void *)g_variant_get_data(variant);
+			DBusMessageIter sub;
 
-				RETV_IF_FAIL(data != NULL, 0);
-				RETV_IF_FAIL(data_size > 0, 0);
+			RETV_IF_FAIL(data != NULL, 0);
+			RETV_IF_FAIL(data_size > 0, 0);
 
-				dbus_message_iter_open_container(&iter, DBUS_TYPE_ARRAY, "y", &sub);
-				if (!dbus_message_iter_append_fixed_array(&sub, DBUS_TYPE_BYTE, (void *)&data, data_size)) {
-					ERR("[EOM_CLIENT:%s] failed: uint append", client_info.name);
-					return 0;
-				}
-				dbus_message_iter_close_container(&iter, &sub);
+			dbus_message_iter_open_container(&iter,
+				DBUS_TYPE_ARRAY, "y", &sub);
+			if (!dbus_message_iter_append_fixed_array(&sub,
+				DBUS_TYPE_BYTE, (void *)&data, data_size)) {
+				ERR("[EOM_CLIENT:%s] failed: uint append",
+					client_info.name);
+				return 0;
 			}
+			dbus_message_iter_close_container(&iter, &sub);
+		}
 			break;
 		default:
 			return 0;
@@ -181,45 +191,50 @@ _eom_dbus_convert_message_to_gvalue(DBusMessage *msg)
 		int type = dbus_message_iter_get_arg_type(&iter);
 		GValue v = G_VALUE_INIT;
 
-		INFO("[EOM_CLIENT:%s] type(%c(%d))", client_info.name, (char)type, type);
+		INFO("[EOM_CLIENT:%s] type(%c(%d))",
+			client_info.name, (char)type, type);
 
 		switch (type) {
 		case DBUS_TYPE_INT32:
-			{
-				int integer = 0;
-				dbus_message_iter_get_basic(&iter, &integer);
-				g_value_init(&v, G_TYPE_INT);
-				g_value_set_int(&v, integer);
-				array = g_array_append_val(array, v);
-				g_value_unset(&v);
-			}
+		{
+			int integer = 0;
+
+			dbus_message_iter_get_basic(&iter, &integer);
+			g_value_init(&v, G_TYPE_INT);
+			g_value_set_int(&v, integer);
+			array = g_array_append_val(array, v);
+			g_value_unset(&v);
+		}
 			break;
 		case DBUS_TYPE_UINT32:
-			{
-				unsigned int uinteger = 0;
-				dbus_message_iter_get_basic(&iter, &uinteger);
-				g_value_init(&v, G_TYPE_UINT);
-				g_value_set_uint(&v, uinteger);
-				array = g_array_append_val(array, v);
-				g_value_unset(&v);
-			}
+		{
+			unsigned int uinteger = 0;
+
+			dbus_message_iter_get_basic(&iter, &uinteger);
+			g_value_init(&v, G_TYPE_UINT);
+			g_value_set_uint(&v, uinteger);
+			array = g_array_append_val(array, v);
+			g_value_unset(&v);
+		}
 			break;
 		case DBUS_TYPE_STRING:
-			{
-				char *string = NULL;
-				dbus_message_iter_get_basic(&iter, &string);
-				g_value_init(&v, G_TYPE_STRING);
-				g_value_set_string(&v, string);
-				array = g_array_append_val(array, v);
-				g_value_unset(&v);
-			}
+		{
+			char *string = NULL;
+
+			dbus_message_iter_get_basic(&iter, &string);
+			g_value_init(&v, G_TYPE_STRING);
+			g_value_set_string(&v, string);
+			array = g_array_append_val(array, v);
+			g_value_unset(&v);
+		}
 			break;
 		default:
 			NEVER_GET_HERE();
 			g_array_free(array, FALSE);
 			return NULL;
 		}
-	} while (dbus_message_iter_has_next(&iter) && dbus_message_iter_next(&iter));
+	} while (dbus_message_iter_has_next(&iter) &&
+		dbus_message_iter_next(&iter));
 
 	return array;
 }
@@ -241,7 +256,8 @@ _eom_dbus_client_process_message(EomDBusClientInfo *info, DBusMessage *msg)
 		EomDBusClientMethod *method = *prev;
 
 		if (!strcmp(dbus_message_get_member(msg), method->name)) {
-			GArray *array = _eom_dbus_convert_message_to_gvalue(msg);
+			GArray *array =
+				_eom_dbus_convert_message_to_gvalue(msg);
 
 			if (method->func)
 				method->func(method->data, array);
@@ -278,7 +294,8 @@ _eom_dbus_client_cb(GIOChannel *src, GIOCondition cond, gpointer data)
 
 
 static DBusHandlerResult
-_eom_dbus_client_msg_handler(DBusConnection *connection, DBusMessage *msg, void *data)
+_eom_dbus_client_msg_handler(DBusConnection *connection,
+		DBusMessage *msg, void *data)
 {
 	EomDBusClientInfo *info = (EomDBusClientInfo *)data;
 
@@ -316,7 +333,9 @@ _eom_dbus_client_initialize(EomDBusClientInfo *info)
 {
 	DBusError err;
 	int ret;
-	DBusObjectPathVTable vtable = {.message_function = _eom_dbus_client_msg_handler, };
+	DBusObjectPathVTable vtable = {
+		.message_function = _eom_dbus_client_msg_handler,
+	};
 	GIOChannel *channel;
 
 	dbus_error_init(&err);
@@ -335,7 +354,8 @@ _eom_dbus_client_initialize(EomDBusClientInfo *info)
 		goto free_err;
 	}
 
-	ret = dbus_bus_request_name(info->conn, info->name, DBUS_NAME_FLAG_REPLACE_EXISTING, &err);
+	ret = dbus_bus_request_name(info->conn,
+		info->name, DBUS_NAME_FLAG_REPLACE_EXISTING, &err);
 	if (dbus_error_is_set(&err)) {
 		ERR("[EOM] failed: request name (%s)", err.message);
 		goto free_conn;
@@ -345,7 +365,8 @@ _eom_dbus_client_initialize(EomDBusClientInfo *info)
 		goto free_conn;
 	}
 
-	snprintf(info->rule, sizeof(info->rule), "interface='%s'", EOM_DBUS_INTERFACE);
+	snprintf(info->rule, sizeof(info->rule),
+		"interface='%s'", EOM_DBUS_INTERFACE);
 
 	dbus_bus_add_match(info->conn, info->rule, &err);
 	dbus_connection_flush(info->conn);
@@ -354,19 +375,22 @@ _eom_dbus_client_initialize(EomDBusClientInfo *info)
 		goto free_name;
 	}
 
-	if (!dbus_connection_register_object_path(info->conn, EOM_DBUS_PATH, &vtable, info)) {
+	if (!dbus_connection_register_object_path(info->conn,
+		EOM_DBUS_PATH, &vtable, info)) {
 		ERR("[EOM] failed: register object path");
 		goto free_match;
 	}
 
 	dbus_connection_set_exit_on_disconnect(info->conn, FALSE);
 
-	if (!dbus_connection_add_filter(info->conn, _eom_dbus_client_msg_filter, info, NULL)) {
+	if (!dbus_connection_add_filter(info->conn,
+		_eom_dbus_client_msg_filter, info, NULL)) {
 		ERR("[EOM] failed: add filter (%s)", err.message);
 		goto free_register;
 	}
 
-	if (!dbus_connection_get_unix_fd(info->conn, &info->fd) || info->fd < 0) {
+	if (!dbus_connection_get_unix_fd(info->conn,
+		&info->fd) || info->fd < 0) {
 		ERR("[EOM] failed: get fd");
 		goto free_filter;
 	}
@@ -377,7 +401,8 @@ _eom_dbus_client_initialize(EomDBusClientInfo *info)
 	g_io_channel_set_flags(channel, G_IO_FLAG_NONBLOCK, NULL);
 
 	info->src = g_io_create_watch(channel, G_IO_IN);
-	g_source_set_callback(info->src, (GSourceFunc)_eom_dbus_client_cb, (gpointer)info, NULL);
+	g_source_set_callback(info->src,
+		(GSourceFunc)_eom_dbus_client_cb, (gpointer)info, NULL);
 	g_source_attach(info->src, NULL);
 
 	g_io_channel_unref(channel);
@@ -387,7 +412,8 @@ _eom_dbus_client_initialize(EomDBusClientInfo *info)
 	return 1;
 
 free_filter:
-	dbus_connection_remove_filter(info->conn, _eom_dbus_client_msg_filter, info);
+	dbus_connection_remove_filter(info->conn,
+		_eom_dbus_client_msg_filter, info);
 free_register:
 	dbus_connection_unregister_object_path(info->conn, EOM_DBUS_PATH);
 free_match:
@@ -462,7 +488,8 @@ _eom_dbus_client_add_method(EomDBusClientMethod *method)
 {
 	EomDBusClientMethod **prev;
 
-	for (prev = &client_info.methods; *prev; prev = &(*prev)->next);
+	for (prev = &client_info.methods; *prev; prev = &(*prev)->next)
+		;
 
 	method->next = NULL;
 	*prev = method;
@@ -510,9 +537,10 @@ eom_dbus_client_deinit(GList *cb_info_list)
 	if (!dbus_initialized)
 		return;
 
-	/* An output instance and a callback can be created and be added only by user.
-	 * If there is cb_info_list, it means that user is still
-	 * watching and interested with eom dbus message.
+	/* An output instance and a callback can be created
+	 * and be added only by user. If there is cb_info_list,
+	 * it means that user is still watching and interested
+	 * with eom dbus message.
 	 */
 	if (cb_info_list)
 		return;
@@ -535,19 +563,23 @@ eom_dbus_client_send_message(char *method, GArray *array)
 
 	dbus_error_init(&err);
 
-	msg = dbus_message_new_method_call(EOM_DBUS_SERVER, EOM_DBUS_PATH, EOM_DBUS_INTERFACE, method);
+	msg = dbus_message_new_method_call(EOM_DBUS_SERVER,
+		EOM_DBUS_PATH, EOM_DBUS_INTERFACE, method);
 	GOTO_IF_FAIL(msg != NULL, err_send);
 
 	INFO("[EOM_CLIENT:%s] Send message(%s)", client_info.name, method);
 
 	if (!_eom_dbus_convert_gvalue_to_message(array, msg)) {
-		ERR("[EOM_CLIENT:%s] failed: gvalue_to_message", client_info.name);
+		ERR("[EOM_CLIENT:%s] failed: gvalue_to_message",
+			client_info.name);
 		goto err_send;
 	}
 
-	reply_msg = dbus_connection_send_with_reply_and_block(client_info.conn, msg, REPLY_TIME, &err);
+	reply_msg = dbus_connection_send_with_reply_and_block(client_info.conn,
+		msg, REPLY_TIME, &err);
 	if (dbus_error_is_set(&err)) {
-		ERR("[EOM_CLIENT:%s] failed: send (%s)", client_info.name, err.message);
+		ERR("[EOM_CLIENT:%s] failed: send (%s)",
+			client_info.name, err.message);
 		goto err_send;
 	}
 	GOTO_IF_FAIL(reply_msg != NULL, err_send);
@@ -610,7 +642,8 @@ fail:
 }
 
 GArray *
-eom_dbus_client_set_attribute(eom_output_id output_id, eom_output_attribute_e attr)
+eom_dbus_client_set_attribute(eom_output_id output_id,
+		eom_output_attribute_e attr)
 {
 	GArray *array = NULL;
 	GArray *msg_array;
@@ -680,6 +713,7 @@ eom_dbus_client_set_window(eom_output_id output_id, Evas_Object *win)
 
 #ifdef HAVE_TIZEN_2_X
 	const char *profile = "desktop";
+
 	elm_win_profiles_set(win, &profile, 1);
 #endif
 	elm_win_fullscreen_set(win, EINA_TRUE);

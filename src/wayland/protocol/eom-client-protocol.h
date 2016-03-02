@@ -1,7 +1,7 @@
 #ifndef WL_EOM_CLIENT_PROTOCOL_H
 #define WL_EOM_CLIENT_PROTOCOL_H
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -216,13 +216,14 @@ wl_eom_destroy(struct wl_eom *wl_eom)
 }
 
 static inline void
-wl_eom_set_attribute(struct wl_eom *wl_eom, struct wl_output *output, uint32_t attribute)
+wl_eom_set_attribute(struct wl_eom *wl_eom, struct wl_output *output,
+		uint32_t attribute)
 {
 	wl_proxy_marshal((struct wl_proxy *) wl_eom,
 			 WL_EOM_SET_ATTRIBUTE, output, attribute);
 }
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 

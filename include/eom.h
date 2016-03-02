@@ -1,35 +1,35 @@
 /**************************************************************************
-
-External Output Manager (EOM)
-
-Copyright 2014 Samsung Electronics co., Ltd. All Rights Reserved.
-
-Contact:
-SooChan Lim <sc1.lim@samsung.com>
-Boram Park <boram1288.park@samsung.com>
-Changyeon Lee <cyeon.lee@samsung.com>
-JunKyeong Kim <jk0430.kim@samsung.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sub license, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice (including the
-next paragraph) shall be included in all copies or substantial portions
-of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
-IN NO EVENT SHALL PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR
-ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+ *
+ * eom (external output manager)
+ *
+ * Copyright 2014 Samsung Electronics co., Ltd. All Rights Reserved.
+ *
+ * Contact:
+ * SooChan Lim <sc1.lim@samsung.com>
+ * Boram Park <boram1288.park@samsung.com>
+ * Changyeon Lee <cyeon.lee@samsung.com>
+ * JunKyeong Kim <jk0430.kim@samsung.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sub license, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice (including the
+ * next paragraph) shall be included in all copies or substantial portions
+ * of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
+ * IN NO EVENT SHALL PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR
+ * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
 **************************************************************************/
 
 #ifndef __EOM_H__
@@ -55,7 +55,7 @@ extern "C" {
  * @file eom.h
  */
 #ifndef TIZEN_ERROR_EOM
-#define TIZEN_ERROR_EOM			-0x02F20000 | 0x00
+#define TIZEN_ERROR_EOM			(-0x02F20000 | 0x00)
 #endif
 /**
  * @brief Enumeration of External Output Manager (EOM) error type
@@ -138,40 +138,48 @@ typedef enum {
 typedef unsigned int eom_output_id;
 
 /**
- * @brief Called when External Output Manager (EOM) module sends output connection notification.
+ * @brief Called when External Output Manager (EOM) module sends output
+ *           connection notification.
  * @since_tizen 2.4
  * @param[in] output_id  The output id which is connected output
- * @param[in] user_data  The pointer of user data which is passed to eom_output_added_cb function
+ * @param[in] user_data  The pointer of user data which is passed to
+ *                                   eom_output_added_cb function
  * @see eom_set_output_added_cb()
  * @see eom_unset_output_added_cb()
  */
 typedef void (*eom_output_added_cb)(eom_output_id output_id, void *user_data);
 
 /**
- * @brief Called when External Output Manager (EOM) module sends output disconnection notification.
+ * @brief Called when External Output Manager (EOM) module sends output
+ *           disconnection notification.
  * @since_tizen 2.4
  * @param[in] output_id  The output id which is connected output
- * @param[in] user_data  The pointer of user data which is passed to eom_output_removed_cb function
+ * @param[in] user_data  The pointer of user data which is passed to
+ *                                   eom_output_removed_cb function
  * @see eom_set_output_removed_cb()
  * @see eom_unset_output_removed_cb()
  */
 typedef void (*eom_output_removed_cb)(eom_output_id output_id, void *user_data);
 
 /**
- * @brief Called when External Output Manager (EOM) module sends output mode changing notification.
+ * @brief Called when External Output Manager (EOM) module sends output
+ *           mode changing notification.
  * @since_tizen 2.4
  * @param[in] output_id  The output id which is connected output
- * @param[in] user_data  The pointer of user data which is passed to eom_mode_changed_cb function
+ * @param[in] user_data  The pointer of user data which is passed to
+ *                                   eom_mode_changed_cb function
  * @see eom_set_mode_changed_cb()
  * @see eom_unset_mode_changed_cb()
  */
 typedef void (*eom_mode_changed_cb)(eom_output_id output_id, void *user_data);
 
 /**
- * @brief Called when External Output Manager (EOM) module sends output attribute changing notification.
+ * @brief Called when External Output Manager (EOM) module sends output
+ *           attribute changing notification.
  * @since_tizen 2.4
  * @param[in] output_id  The output id which is connected output
- * @param[in] user_data  The pointer of user data which is passed to eom_attribute_changed_cb function
+ * @param[in] user_data  The pointer of user data which is passed to
+ *                                   eom_attribute_changed_cb function
  * @see eom_set_attribute_changed_cb()
  * @see eom_unset_attribute_changed_cb()
  */
@@ -192,17 +200,21 @@ int eom_init(void);
 
 /**
  * @brief Finalizes External Output Manager (EOM).
- * @details User should call this function after using EOM to release all resources of EOM.
+ * @details User should call this function after using EOM to release all
+ *              resources of EOM.
  * @since_tizen 2.4
  * @see eom_init()
  */
 void eom_deinit(void);
 
 /**
- * @brief Registers a callback function to get output connection notification from External Output Manager (EOM) module.
+ * @brief Registers a callback function to get output connection notification
+ *           from External Output Manager (EOM) module.
  * @since_tizen 2.4
- * @param[in] callback  The function pointer of eom_output_added_cb callback function
- * @param[in] user_data  The pointer of user data which is passed to eom_output_added_cb function
+ * @param[in] callback  The function pointer of eom_output_added_cb callback
+ *                                function
+ * @param[in] user_data  The pointer of user data which is passed to
+ *                                   eom_output_added_cb function
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_OUT_OF_MEMORY Memory allocation failure
@@ -217,7 +229,8 @@ int eom_set_output_added_cb(eom_output_added_cb callback, void *user_data);
 /**
  * @brief Unregisters the callback function.
  * @since_tizen 2.4
- * @param[in] callback  The function pointer of eom_output_added_cb callback function
+ * @param[in] callback  The function pointer of eom_output_added_cb callback
+ *                                function
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_INVALID_PARAMETER Invalid parameter
@@ -229,10 +242,13 @@ int eom_set_output_added_cb(eom_output_added_cb callback, void *user_data);
 int eom_unset_output_added_cb(eom_output_added_cb callback);
 
 /**
- * @brief Registers a callback function to get output disconnection notification from External Output Manager (EOM) module.
+ * @brief Registers a callback function to get output disconnection
+ *           notification from External Output Manager (EOM) module.
  * @since_tizen 2.4
- * @param[in] callback  The function pointer of eom_output_removed_cb callback function
- * @param[in] user_data  The pointer of user data which is passed to eom_output_removed_cb function
+ * @param[in] callback  The function pointer of eom_output_removed_cb callback
+ *                                function
+ * @param[in] user_data  The pointer of user data which is passed to
+ *                                   eom_output_removed_cb function
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_OUT_OF_MEMORY Memory allocation failure
@@ -247,7 +263,8 @@ int eom_set_output_removed_cb(eom_output_removed_cb callback, void *user_data);
 /**
  * @brief Unregisters the callback function.
  * @since_tizen 2.4
- * @param[in] callback  The function pointer of eom_output_removed_cb callback function
+ * @param[in] callback  The function pointer of eom_output_removed_cb callback
+ *                                function
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_INVALID_PARAMETER Invalid parameter
@@ -259,10 +276,13 @@ int eom_set_output_removed_cb(eom_output_removed_cb callback, void *user_data);
 int eom_unset_output_removed_cb(eom_output_removed_cb callback);
 
 /**
- * @brief Registers a callback function to get output mode changing notification from External Output Manager (EOM) module.
+ * @brief Registers a callback function to get output mode changing
+ *           notification from External Output Manager (EOM) module.
  * @since_tizen 2.4
- * @param[in] callback  The function pointer of eom_mode_changed_cb callback function
- * @param[in] user_data  The pointer of user data which is passed to eom_mode_changed_cb function
+ * @param[in] callback  The function pointer of eom_mode_changed_cb callback
+ *                                function
+ * @param[in] user_data  The pointer of user data which is passed to
+ *                                   eom_mode_changed_cb function
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_OUT_OF_MEMORY Memory allocation failure
@@ -277,7 +297,8 @@ int eom_set_mode_changed_cb(eom_mode_changed_cb callback, void *user_data);
 /**
  * @brief Unregisters the callback function.
  * @since_tizen 2.4
- * @param[in] callback  The function pointer of eom_mode_changed_cb callback function
+ * @param[in] callback  The function pointer of eom_mode_changed_cb callback
+ *                                function
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_INVALID_PARAMETER Invalid parameter
@@ -289,10 +310,13 @@ int eom_set_mode_changed_cb(eom_mode_changed_cb callback, void *user_data);
 int eom_unset_mode_changed_cb(eom_mode_changed_cb callback);
 
 /**
- * @brief Registers a callback function to get output attribute changing notification from External Output Manager (EOM) module.
+ * @brief Registers a callback function to get output attribute changing
+ *           notification from External Output Manager (EOM) module.
  * @since_tizen 2.4
- * @param[in] callback  The function pointer of eom_attribute_changed_cb callback function
- * @param[in] user_data  The pointer of user data which is passed to eom_attribute_changed_cb function
+ * @param[in] callback  The function pointer of eom_attribute_changed_cb
+ *                                callback function
+ * @param[in] user_data  The pointer of user data which is passed to
+ *                                   eom_attribute_changed_cb function
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_OUT_OF_MEMORY Memory allocation failure
@@ -307,7 +331,8 @@ int eom_set_attribute_changed_cb(eom_attribute_changed_cb callback, void *user_d
 /**
  * @brief Unregisters the callback function.
  * @since_tizen 2.4
- * @param[in] callback  The function pointer of eom_attribute_changed_cb callback function
+ * @param[in] callback  The function pointer of eom_attribute_changed_cb
+ *                                callback function
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_INVALID_PARAMETER Invalid parameter
@@ -320,15 +345,17 @@ int eom_unset_attribute_changed_cb(eom_attribute_changed_cb callback);
 
 /**
  * @brief Gets the IDs and count of external output.
- * @details This function returns the IDs of external output which are available to connect
- * to target device, and the count of them also. User can get the id of external output
+ * @details This function returns the IDs of external output which are
+ *              available to connect to target device, and the count of them
+ *              also. User can get the id of external output.
  * which user want to watch.
  * @since_tizen 2.4
- * @remarks User should free return value by using free().\n
+ * @remarks User should free return value by using free().
  * The specific error code can be obtained using the get_last_result() method.
  * Error codes are described in Exception section.
  * @param[out] count  The count of the eom_output_id supported by system
- * @return The array of the eom_output_id if this function succeeds, otherwise NULL
+ * @return The array of the eom_output_id if this function succeeds, otherwise
+ *             NULL
  * @retval The pointer of #eom_output_id
  * @exception #EOM_ERROR_NONE Successful
  * @exception #EOM_ERROR_INVALID_PARAMETER Invalid parameter
@@ -450,7 +477,8 @@ int eom_get_output_physical_size(eom_output_id output_id, int *phy_width, int *p
 
 /**
  * @brief Sets the attribute of the external output ID.
- * @details The application can set the External Output Manager (EOM) attribute to the external output ID.
+ * @details The application can set the External Output Manager (EOM) attribute
+ *              to the external output ID.
  * The EOM module manages the windows to display on external output and
  * control the policy of external output. The application can recognize
  * the attribute state and manage the resources when the application receives
@@ -462,7 +490,8 @@ int eom_get_output_physical_size(eom_output_id output_id, int *phy_width, int *p
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #EOM_ERROR_NO_SUCH_DEVICE Invalid external output instance
- * @retval #EOM_ERROR_MESSAGE_SENDING_FAILURE Communication failure with EOM module
+ * @retval #EOM_ERROR_MESSAGE_SENDING_FAILURE Communication failure with EOM
+ *              module
  * @retval #EOM_ERROR_MESSAGE_OPERATION_FAILURE Operation failure
  * @pre eom_init()
  * @pre eom_get_eom_output_ids()
@@ -472,7 +501,8 @@ int eom_get_output_physical_size(eom_output_id output_id, int *phy_width, int *p
 int eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e attr);
 
 /**
- * @brief Sets window to the external output best resolution of external output device.
+ * @brief Sets window to the external output best resolution of external output
+ *           device.
  * @since_tizen 2.4
  * @param[in] output_id  The id of external output device
  * @param[in] win  The pointer of evas object
@@ -480,7 +510,8 @@ int eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e att
  * @retval #EOM_ERROR_NONE Successful
  * @retval #EOM_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #EOM_ERROR_NO_SUCH_DEVICE Invalid external output instance
- * @retval #EOM_ERROR_MESSAGE_SENDING_FAILURE Communication failure with EOM module
+ * @retval #EOM_ERROR_MESSAGE_SENDING_FAILURE Communication failure with EOM
+ *               module
  * @retval #EOM_ERROR_MESSAGE_OPERATION_FAILURE Operation failure
  * @pre eom_init()
  * @pre eom_get_eom_output_ids()
