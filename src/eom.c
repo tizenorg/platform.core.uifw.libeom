@@ -1,34 +1,35 @@
 /**************************************************************************
-
-eom (external output manager)
-
-Copyright 2014 Samsung Electronics co., Ltd. All Rights Reserved.
-
-Contact:
-SooChan Lim <sc1.lim@samsung.com>
-Boram Park <boram1288.park@samsung.com>
-Changyeon Lee <cyeon.lee@samsung.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sub license, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice (including the
-next paragraph) shall be included in all copies or substantial portions
-of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
-IN NO EVENT SHALL PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR
-ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+ *
+ * eom (external output manager)
+ *
+ * Copyright 2014 Samsung Electronics co., Ltd. All Rights Reserved.
+ *
+ * Contact:
+ * SooChan Lim <sc1.lim@samsung.com>
+ * Boram Park <boram1288.park@samsung.com>
+ * Changyeon Lee <cyeon.lee@samsung.com>
+ * JunKyeong Kim <jk0430.kim@samsung.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sub license, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice (including the
+ * next paragraph) shall be included in all copies or substantial portions
+ * of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
+ * IN NO EVENT SHALL PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR
+ * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
 **************************************************************************/
 
 #include <config.h>
@@ -71,18 +72,27 @@ typedef struct {
 } eom_output_notify_mode_change_s;
 
 typedef struct {
-	eom_output_notify_type_e     type;        /**< External output type */
-	eom_output_id                output_id;   /**< External output id */
-	eom_output_attribute_e       attribute;   /**< External output attribute */
-	eom_output_attribute_state_e attr_state;  /**< External output attribute state */
+    /**< External output type */
+	eom_output_notify_type_e     type;
+	/**< External output id */
+	eom_output_id                output_id;
+	/**< External output attribute */
+	eom_output_attribute_e       attribute;
+	/**< External output attribute state */
+	eom_output_attribute_state_e attr_state;
 } eom_output_notify_attribute_change_s;
 
 typedef union {
-	eom_output_notify_base_s             base;           /**< Base structure for eom notify */
-	eom_output_notify_add_s              output_add;     /**< #EOM_OUTPUT_NOTIFY_ADD notify */
-	eom_output_notify_remove_s           output_remove;  /**< #EOM_OUTPUT_NOTIFY_REMOVE notify */
-	eom_output_notify_mode_change_s      mode_change;    /**< #EOM_OUTPUT_NOTIFY_MODE_CHANGED notify */
-	eom_output_notify_attribute_change_s attr_change;    /**< #EOM_OUTPUT_NOTIFY_ATTRIBUTE_CHANGED notify */
+    /**< Base structure for eom notify */
+	eom_output_notify_base_s             base;
+	/**< #EOM_OUTPUT_NOTIFY_ADD notify */
+	eom_output_notify_add_s              output_add;
+	/**< #EOM_OUTPUT_NOTIFY_REMOVE notify */
+	eom_output_notify_remove_s           output_remove;
+	/**< #EOM_OUTPUT_NOTIFY_MODE_CHANGED notify */
+	eom_output_notify_mode_change_s      mode_change;
+	/**< #EOM_OUTPUT_NOTIFY_ATTRIBUTE_CHANGED notify */
+	eom_output_notify_attribute_change_s attr_change;
 } eom_output_notify_s;
 
 typedef struct {
@@ -165,7 +175,7 @@ _eom_get_debug_evn(void)
 static bool
 _eom_mutex_init(void)
 {
-	static bool init = false;
+	static bool init;
 
 	if (init)
 		return true;
@@ -196,7 +206,8 @@ _eom_mutex_unlock(void)
 }
 
 static void
-_eom_set_output_info_mode(eom_output_info *output_info, int output_mode)
+_eom_set_output_info_mode(eom_output_info *output_info,
+		int output_mode)
 {
 	RET_IF_FAIL(output_info != NULL);
 
@@ -207,7 +218,8 @@ _eom_set_output_info_mode(eom_output_info *output_info, int output_mode)
 }
 
 static void
-_eom_set_output_attribute(eom_output_info *output_info, eom_output_attribute_e attribute)
+_eom_set_output_attribute(eom_output_info *output_info,
+		eom_output_attribute_e attribute)
 {
 	RET_IF_FAIL(output_info != NULL);
 
@@ -215,7 +227,8 @@ _eom_set_output_attribute(eom_output_info *output_info, eom_output_attribute_e a
 }
 
 static void
-_eom_set_output_attribute_state(eom_output_info *output_info, eom_output_attribute_state_e state)
+_eom_set_output_attribute_state(eom_output_info *output_info,
+		eom_output_attribute_state_e state)
 {
 	RET_IF_FAIL(output_info != NULL);
 
@@ -223,7 +236,8 @@ _eom_set_output_attribute_state(eom_output_info *output_info, eom_output_attribu
 }
 
 static void
-_eom_set_output_info_size(eom_output_info *output_info, int w, int h)
+_eom_set_output_info_size(eom_output_info *output_info,
+		int w, int h)
 {
 	RET_IF_FAIL(output_info != NULL);
 
@@ -232,7 +246,8 @@ _eom_set_output_info_size(eom_output_info *output_info, int w, int h)
 }
 
 static void
-_eom_set_output_info_phy_size(eom_output_info *output_info, int w_mm, int h_mm)
+_eom_set_output_info_phy_size(eom_output_info *output_info,
+		int w_mm, int h_mm)
 {
 	RET_IF_FAIL(output_info != NULL);
 
@@ -258,7 +273,8 @@ _eom_output_call_notify_cb(eom_output_notify_s *notify)
 	GList *l;
 
 	for (l = cb_info_list; l; l = g_list_next(l)) {
-		eom_output_notify_cb_info *cb_info = (eom_output_notify_cb_info *)l->data;
+		eom_output_notify_cb_info *cb_info =
+			(eom_output_notify_cb_info *)l->data;
 
 		if (!cb_info || cb_info->type != notify->base.type)
 			continue;
@@ -267,32 +283,43 @@ _eom_output_call_notify_cb(eom_output_notify_s *notify)
 			if (cb_info->add_func == NULL)
 				continue;
 
-			INFO("cb_info: type(%d) output_id(%d)", notify->base.type, notify->base.output_id);
+			INFO("cb_info: type(%d) output_id(%d)",
+				notify->base.type, notify->base.output_id);
 
-			cb_info->add_func(notify->base.output_id, cb_info->user_data);
+			cb_info->add_func(notify->base.output_id,
+				cb_info->user_data);
 		} else if (notify->base.type == EOM_OUTPUT_NOTIFY_REMOVE) {
 			if (cb_info->remove_func == NULL)
 				continue;
 
-			INFO("cb_info: type(%d) output_id(%d)", notify->base.type, notify->base.output_id);
+			INFO("cb_info: type(%d) output_id(%d)",
+				notify->base.type, notify->base.output_id);
 
-			cb_info->remove_func(notify->base.output_id, cb_info->user_data);
-		} else if (notify->base.type == EOM_OUTPUT_NOTIFY_MODE_CHANGED) {
+			cb_info->remove_func(notify->base.output_id,
+				cb_info->user_data);
+		} else if (notify->base.type ==
+			EOM_OUTPUT_NOTIFY_MODE_CHANGED) {
 			if (cb_info->mode_change_func == NULL)
 				continue;
 
-			INFO("cb_info: type(%d) output_id(%d)", notify->base.type, notify->base.output_id);
+			INFO("cb_info: type(%d) output_id(%d)",
+				notify->base.type, notify->base.output_id);
 
-			cb_info->mode_change_func(notify->base.output_id, cb_info->user_data);
-		} else if (notify->base.type == EOM_OUTPUT_NOTIFY_ATTRIBUTE_CHANGED) {
+			cb_info->mode_change_func(notify->base.output_id,
+				cb_info->user_data);
+		} else if (notify->base.type ==
+			EOM_OUTPUT_NOTIFY_ATTRIBUTE_CHANGED) {
 			if (cb_info->attribute_change_func == NULL)
 				continue;
 
-			INFO("cb_info: type(%d) output_id(%d)", notify->base.type, notify->base.output_id);
+			INFO("cb_info: type(%d) output_id(%d)",
+				notify->base.type, notify->base.output_id);
 
-			cb_info->attribute_change_func(notify->base.output_id, cb_info->user_data);
+			cb_info->attribute_change_func(notify->base.output_id,
+				cb_info->user_data);
 		} else {
-			INFO("cb_info: type(%d) output_id(%d)", notify->base.type, notify->base.output_id);
+			INFO("cb_info: type(%d) output_id(%d)",
+				notify->base.type, notify->base.output_id);
 			continue;
 		}
 	}
@@ -303,13 +330,16 @@ _eom_output_process_notify_cb(void *data, GArray *array)
 {
 	eom_output_notify_s notify;
 	eom_output_info *output_info;
-	int notify_type, output_id, output_type, output_mode, w, h, w_mm, h_mm, pid, attr, state;
+	int notify_type, output_id, output_type, output_mode;
+	int w, h, w_mm, h_mm, pid, attr, state;
 	GValue *v;
 
 	RET_IF_FAIL(array != NULL);
 	RET_IF_FAIL(array->len == 11);
 
-	/* 11 args 0: notify_type 1:output_id, 2:output_type, 3:output_mode, 4:w, 5:h, 6:w_mm, 7:h_mm, 8:pid, 9:attr, 10:state */
+/* 11 args 0: notify_type 1:output_id, 2:output_type, 3:output_mode,
+  *             4:w, 5:h, 6:w_mm, 7:h_mm, 8:pid, 9:attr, 10:state
+  */
 	v = &g_array_index(array, GValue, 0);
 	notify_type = g_value_get_int(v);
 	v = &g_array_index(array, GValue, 1);
@@ -334,7 +364,8 @@ _eom_output_process_notify_cb(void *data, GArray *array)
 	state = g_value_get_int(v);
 
 	INFO("notify: %d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
-		notify_type, output_id, output_type, output_mode, w, h, w_mm, h_mm, pid, attr, state);
+		notify_type, output_id, output_type, output_mode,
+		w, h, w_mm, h_mm, pid, attr, state);
 
 	memset(&notify, 0, sizeof(eom_output_notify_s));
 	notify.base.type = notify_type;
@@ -380,7 +411,8 @@ _eom_output_process_notify_cb(void *data, GArray *array)
 			output_info->output_mode = output_mode;
 
 			INFO("'%s(%d)' mode changed(%d=>%d)",
-					TYPE(output_type), output_id, old_mode, output_info->output_mode);
+				TYPE(output_type), output_id,
+				old_mode, output_info->output_mode);
 
 			notify.mode_change.old_mode = old_mode;
 			notify.mode_change.new_mode = output_info->output_mode;
@@ -392,25 +424,27 @@ _eom_output_process_notify_cb(void *data, GArray *array)
 		break;
 
 	case EOM_OUTPUT_NOTIFY_ATTRIBUTE_CHANGED:
-		{
-			int current_pid = getpid();
+	{
+		int current_pid = getpid();
 
-			if (current_pid == pid) {
-				INFO("'%s(%d)'pid(%d)", TYPE(output_type), output_id, pid);
-				_eom_set_output_attribute(output_info, attr);
-				_eom_set_output_attribute_state(output_info, state);
-				notify.attr_change.output_id = output_id;
-				notify.attr_change.attribute = attr;
-				notify.attr_change.attr_state = state;
+		if (current_pid == pid) {
+			INFO("'%s(%d)'pid(%d)",
+				TYPE(output_type), output_id, pid);
+			_eom_set_output_attribute(output_info, attr);
+			_eom_set_output_attribute_state(output_info, state);
+			notify.attr_change.output_id = output_id;
+			notify.attr_change.attribute = attr;
+			notify.attr_change.attr_state = state;
 
-				_eom_mutex_unlock();
-				_eom_output_call_notify_cb(&notify);
-				_eom_mutex_lock();
+			_eom_mutex_unlock();
+			_eom_output_call_notify_cb(&notify);
+			_eom_mutex_lock();
 
-				if (state == EOM_OUTPUT_ATTRIBUTE_STATE_LOST)
-					_eom_set_output_attribute_state(output_info, EOM_OUTPUT_ATTRIBUTE_STATE_NONE);
-			}
+			if (state == EOM_OUTPUT_ATTRIBUTE_STATE_LOST)
+				_eom_set_output_attribute_state(output_info,
+					EOM_OUTPUT_ATTRIBUTE_STATE_NONE);
 		}
+	}
 		break;
 
 	default:
@@ -517,6 +551,7 @@ eom_deinit(void)
 	/* destory output_info. */
 	for (l = output_info_list; l; l = g_list_next(l)) {
 		eom_output_info *output_info = (eom_output_info *)l->data;
+
 		output_info_list = g_list_remove(output_info_list, output_info);
 
 		_eom_free_output_info(&output_info);
@@ -567,6 +602,7 @@ eom_get_eom_output_ids(int *count)
 	*count = ret_array->len;
 	for (i = 0; i < ret_array->len; i++) {
 		GValue *v = &g_array_index(ret_array, GValue, i);
+
 		output_ids[i] = g_value_get_int(v);
 		INFO("output_ids: %d", output_ids[i]);
 	}
@@ -590,18 +626,37 @@ eom_get_eom_output_ids(int *count)
 		ret_array = eom_dbus_client_get_output_info(output_id);
 #endif
 		if (ret_array) {
-			/* 0:output_id, 1:output_type, 2:output_mode, 3:w, 4:h, 5:w_mm, 6:h_mm, 7:attribute */
-			output_info = _eom_alloc_output_info(g_value_get_int(&g_array_index(ret_array, GValue, 0)),
-												  g_value_get_int(&g_array_index(ret_array, GValue, 1)));
+		/*
+		  * 0:output_id, 1:output_type, 2:output_mode,
+		  * 3:w, 4:h, 5:w_mm, 6:h_mm, 7:attribute
+		  */
+			output_info = _eom_alloc_output_info(
+				g_value_get_int(&g_array_index(
+					ret_array, GValue, 0)),
+				g_value_get_int(&g_array_index(
+					ret_array, GValue, 1)));
 			if (output_info) {
-				output_info_list = g_list_append(output_info_list, output_info);
-				_eom_set_output_info_mode(output_info, g_value_get_int(&g_array_index(ret_array, GValue, 2)));
-				_eom_set_output_info_size(output_info, g_value_get_int(&g_array_index(ret_array, GValue, 3)),
-														g_value_get_int(&g_array_index(ret_array, GValue, 4)));
-				_eom_set_output_info_phy_size(output_info, g_value_get_int(&g_array_index(ret_array, GValue, 5)),
-															g_value_get_int(&g_array_index(ret_array, GValue, 6)));
-				_eom_set_output_attribute(output_info, g_value_get_int(&g_array_index(ret_array, GValue, 7)));
-				INFO("GetOutputInfo: %s(%d)", TYPE(output_info->type), output_info->id);
+				output_info_list = g_list_append(
+					output_info_list, output_info);
+				_eom_set_output_info_mode(output_info,
+					g_value_get_int(&g_array_index(
+						ret_array, GValue, 2)));
+				_eom_set_output_info_size(output_info,
+					g_value_get_int(&g_array_index(
+						ret_array, GValue, 3)),
+					g_value_get_int(&g_array_index(
+						ret_array, GValue, 4)));
+				_eom_set_output_info_phy_size(output_info,
+					g_value_get_int(&g_array_index(
+						ret_array, GValue, 5)),
+					g_value_get_int(&g_array_index(
+						ret_array, GValue, 6)));
+				_eom_set_output_attribute(output_info,
+					g_value_get_int(&g_array_index(
+						ret_array, GValue, 7)));
+				INFO("GetOutputInfo: %s(%d)",
+					TYPE(output_info->type),
+						output_info->id);
 			}
 
 			g_array_free(ret_array, FALSE);
@@ -640,9 +695,11 @@ eom_set_output_added_cb(eom_output_added_cb callback, void *user_data)
 	_eom_mutex_lock();
 
 	for (l = cb_info_list; l; l = g_list_next(l)) {
-		eom_output_notify_cb_info *cb_info = (eom_output_notify_cb_info *)l->data;
+		eom_output_notify_cb_info *cb_info =
+			(eom_output_notify_cb_info *)l->data;
 
-		if (cb_info && (cb_info->add_func != NULL) && (cb_info->add_func == callback)) {
+		if (cb_info && (cb_info->add_func != NULL) &&
+				(cb_info->add_func == callback)) {
 			_eom_mutex_unlock();
 			return EOM_ERROR_NONE;
 		}
@@ -677,9 +734,11 @@ eom_unset_output_added_cb(eom_output_added_cb callback)
 	_eom_mutex_lock();
 
 	for (l = cb_info_list; l; l = g_list_next(l)) {
-		eom_output_notify_cb_info *cb_info = (eom_output_notify_cb_info *)l->data;
+		eom_output_notify_cb_info *cb_info =
+			(eom_output_notify_cb_info *)l->data;
 
-		if (!cb_info || (cb_info->add_func == NULL) || (cb_info->add_func != callback))
+		if (!cb_info || (cb_info->add_func == NULL) ||
+				(cb_info->add_func != callback))
 			continue;
 
 		cb_info_list = g_list_remove(cb_info_list, cb_info);
@@ -706,9 +765,11 @@ eom_set_output_removed_cb(eom_output_removed_cb callback, void *user_data)
 	_eom_mutex_lock();
 
 	for (l = cb_info_list; l; l = g_list_next(l)) {
-		eom_output_notify_cb_info *cb_info = (eom_output_notify_cb_info *)l->data;
+		eom_output_notify_cb_info *cb_info =
+			(eom_output_notify_cb_info *)l->data;
 
-		if (cb_info && (cb_info->remove_func != NULL) && (cb_info->remove_func == callback)) {
+		if (cb_info && (cb_info->remove_func != NULL) &&
+				(cb_info->remove_func == callback)) {
 			_eom_mutex_unlock();
 			return EOM_ERROR_NONE;
 		}
@@ -743,9 +804,11 @@ eom_unset_output_removed_cb(eom_output_removed_cb callback)
 	_eom_mutex_lock();
 
 	for (l = cb_info_list; l; l = g_list_next(l)) {
-		eom_output_notify_cb_info *cb_info = (eom_output_notify_cb_info *)l->data;
+		eom_output_notify_cb_info *cb_info =
+			(eom_output_notify_cb_info *)l->data;
 
-		if (!cb_info || (cb_info->remove_func == NULL) || (cb_info->remove_func != callback))
+		if (!cb_info || (cb_info->remove_func == NULL) ||
+				(cb_info->remove_func != callback))
 			continue;
 
 		cb_info_list = g_list_remove(cb_info_list, cb_info);
@@ -772,9 +835,11 @@ eom_set_mode_changed_cb(eom_mode_changed_cb callback, void *user_data)
 	_eom_mutex_lock();
 
 	for (l = cb_info_list; l; l = g_list_next(l)) {
-		eom_output_notify_cb_info *cb_info = (eom_output_notify_cb_info *)l->data;
+		eom_output_notify_cb_info *cb_info =
+			(eom_output_notify_cb_info *)l->data;
 
-		if (cb_info && (cb_info->mode_change_func != NULL) && (cb_info->mode_change_func == callback)) {
+		if (cb_info && (cb_info->mode_change_func != NULL) &&
+				(cb_info->mode_change_func == callback)) {
 			_eom_mutex_unlock();
 			return EOM_ERROR_NONE;
 		}
@@ -809,9 +874,11 @@ eom_unset_mode_changed_cb(eom_mode_changed_cb callback)
 	_eom_mutex_lock();
 
 	for (l = cb_info_list; l; l = g_list_next(l)) {
-		eom_output_notify_cb_info *cb_info = (eom_output_notify_cb_info *)l->data;
+		eom_output_notify_cb_info *cb_info =
+			(eom_output_notify_cb_info *)l->data;
 
-		if (!cb_info || (cb_info->mode_change_func == NULL) || (cb_info->mode_change_func != callback))
+		if (!cb_info || (cb_info->mode_change_func == NULL) ||
+				(cb_info->mode_change_func != callback))
 			continue;
 
 		cb_info_list = g_list_remove(cb_info_list, cb_info);
@@ -838,9 +905,11 @@ eom_set_attribute_changed_cb(eom_attribute_changed_cb callback, void *user_data)
 	_eom_mutex_lock();
 
 	for (l = cb_info_list; l; l = g_list_next(l)) {
-		eom_output_notify_cb_info *cb_info = (eom_output_notify_cb_info *)l->data;
+		eom_output_notify_cb_info *cb_info =
+			(eom_output_notify_cb_info *)l->data;
 
-		if (cb_info && (cb_info->attribute_change_func != NULL) && (cb_info->attribute_change_func == callback)) {
+		if (cb_info && (cb_info->attribute_change_func != NULL) &&
+				(cb_info->attribute_change_func == callback)) {
 			_eom_mutex_unlock();
 			return EOM_ERROR_NONE;
 		}
@@ -875,9 +944,11 @@ eom_unset_attribute_changed_cb(eom_attribute_changed_cb callback)
 	_eom_mutex_lock();
 
 	for (l = cb_info_list; l; l = g_list_next(l)) {
-		eom_output_notify_cb_info *cb_info = (eom_output_notify_cb_info *)l->data;
+		eom_output_notify_cb_info *cb_info =
+			(eom_output_notify_cb_info *)l->data;
 
-		if (!cb_info || (cb_info->attribute_change_func == NULL) || (cb_info->attribute_change_func != callback))
+		if (!cb_info || (cb_info->attribute_change_func == NULL) ||
+				(cb_info->attribute_change_func != callback))
 			continue;
 
 		cb_info_list = g_list_remove(cb_info_list, cb_info);
@@ -894,15 +965,18 @@ eom_unset_attribute_changed_cb(eom_attribute_changed_cb callback)
 }
 
 API int
-eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e attr)
+eom_set_output_attribute(eom_output_id output_id,
+		eom_output_attribute_e attr)
 {
 	eom_output_info *output_info = NULL;
 	bool ret = false;
 	GArray *ret_array;
 
 	RETV_IF_FAIL(output_id != 0, EOM_ERROR_INVALID_PARAMETER);
-	RETV_IF_FAIL(attr > EOM_OUTPUT_ATTRIBUTE_NONE, EOM_ERROR_INVALID_PARAMETER);
-	RETV_IF_FAIL(attr < EOM_OUTPUT_ATTRIBUTE_MAX, EOM_ERROR_INVALID_PARAMETER);
+	RETV_IF_FAIL(attr > EOM_OUTPUT_ATTRIBUTE_NONE,
+		EOM_ERROR_INVALID_PARAMETER);
+	RETV_IF_FAIL(attr < EOM_OUTPUT_ATTRIBUTE_MAX,
+		EOM_ERROR_INVALID_PARAMETER);
 
 	_eom_mutex_lock();
 
@@ -941,7 +1015,8 @@ eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e attr)
 
 
 API int
-eom_get_output_type(eom_output_id output_id, eom_output_type_e *type)
+eom_get_output_type(eom_output_id output_id,
+		eom_output_type_e *type)
 {
 	eom_output_info *output_info = NULL;
 
@@ -965,7 +1040,8 @@ eom_get_output_type(eom_output_id output_id, eom_output_type_e *type)
 }
 
 API int
-eom_get_output_mode(eom_output_id output_id, eom_output_mode_e *mode)
+eom_get_output_mode(eom_output_id output_id,
+		eom_output_mode_e *mode)
 {
 	eom_output_info *output_info = NULL;
 
@@ -989,7 +1065,8 @@ eom_get_output_mode(eom_output_id output_id, eom_output_mode_e *mode)
 }
 
 API int
-eom_get_output_attribute(eom_output_id output_id, eom_output_attribute_e *attribute)
+eom_get_output_attribute(eom_output_id output_id,
+		eom_output_attribute_e *attribute)
 {
 	eom_output_info *output_info = NULL;
 
@@ -1013,7 +1090,8 @@ eom_get_output_attribute(eom_output_id output_id, eom_output_attribute_e *attrib
 }
 
 API int
-eom_get_output_attribute_state(eom_output_id output_id, eom_output_attribute_state_e *state)
+eom_get_output_attribute_state(eom_output_id output_id,
+		eom_output_attribute_state_e *state)
 {
 	eom_output_info *output_info = NULL;
 
@@ -1068,7 +1146,8 @@ eom_get_output_resolution(eom_output_id output_id, int *width, int *height)
 }
 
 API int
-eom_get_output_physical_size(eom_output_id output_id, int *phy_width, int *phy_height)
+eom_get_output_physical_size(eom_output_id output_id,
+		int *phy_width, int *phy_height)
 {
 	eom_output_info *output_info = NULL;
 
