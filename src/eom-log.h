@@ -63,64 +63,34 @@ static inline void set_last_result(int i) {; }
 #define FATAL(fmt, arg...) SECURE_SLOGF(fmt, ##arg)
 #else	/* HAVE_DLOG */
 #include <stdlib.h>
-#define INFO(fmt, arg...)\
+#define INFO(fmt, arg...) \
 	{\
 		if (eom_debug_on)\
 			fprintf(stdout, "[%s:%d] "fmt"\n",\
 				__func__, __LINE__, ##arg);\
 	}
-#define WARN(fmt, arg...)\
+#define WARN(fmt, arg...) \
 	{\
 		if (eom_debug_on)\
 			fprintf(stderr, "[%s:%d] "fmt"\n",\
 				__func__, __LINE__, ##arg);\
 	}
-#define ERR(fmt, arg...)\
+#define ERR(fmt, arg...) \
 		fprintf(stderr, "[%s:%d] "fmt"\n", __func__, __LINE__, ##arg)
-#define ERRNO(fmt, arg...)\
+#define ERRNO(fmt, arg...) \
 		fprintf(stderr, "[%s:%d](err=%s(%d)) "fmt"\n",\
 			__func__, __LINE__, strerror(errno), errno, ##arg)
-#define FATAL(fmt, arg...)\
+#define FATAL(fmt, arg...) \
 		fprintf(stderr, "[%s:%d] "fmt"\n",\
 			__func__, __LINE__, ##arg)
 #endif	 /* HAVE_DLOG */
 
-#define WARN_IF_FAIL(cond)\
-	{\
-		if (!(cond))\
-			ERR("'%s' failed", #cond);\
-	}
-#define RET_IF_FAIL(cond)\
-	{\
-		if (!(cond))\
-			ERR("'%s' failed", #cond);\
-		return;\
-	}
-#define RETV_IF_FAIL(cond, val)\
-	{\
-		if (!(cond))\
-			ERR("'%s' failed", #cond);\
-		return val;\
-	}
-#define RETV_IF_ERRNO(cond, val, errno)\
-	{\
-		if (!(cond))\
-			ERRNO("'%s' failed", #cond);\
-		return val;\
-	}
-#define GOTO_IF_FAIL(cond, dst)\
-	{\
-		if (!(cond))\
-			ERR("'%s' failed", #cond);\
-		goto dst;\
-	}
-#define GOTO_IF_ERRNO(cond, dst, errno)\
-	{\
-		if (!(cond))\
-			ERRNO("'%s' failed", #cond);\
-		goto dst;\
-	}
-#define NEVER_GET_HERE()\
-	ERR("** NEVER GET HERE **\n")
+#define WARN_IF_FAIL(cond)				{if (!(cond)) { ERR("'%s' failed", #cond); } }
+#define RET_IF_FAIL(cond)				{if (!(cond)) { ERR("'%s' failed", #cond); return; } }
+#define RETV_IF_FAIL(cond, val)			{if (!(cond)) { ERR("'%s' failed", #cond); return val; } }
+#define RETV_IF_ERRNO(cond, val, errno)	{if (!(cond)) { ERRNO("'%s' failed", #cond); return val; } }
+#define GOTO_IF_FAIL(cond, dst)			{if (!(cond)) { ERR("'%s' failed", #cond); goto dst; } }
+#define GOTO_IF_ERRNO(cond, dst, errno)	{if (!(cond)) { ERRNO("'%s' failed", #cond); goto dst; } }
+#define NEVER_GET_HERE()				ERR("** NEVER GET HERE **\n")
 
 #endif	/* __EOM_LOG_H__ */
