@@ -35,6 +35,8 @@ Requires: pkgconfig(capi-base-common)
 %description devel
 External Output Manager Library development package
 
+%global TZ_SYS_RO_SHARE  %{?TZ_SYS_RO_SHARE:%TZ_SYS_RO_SHARE}%{!?TZ_SYS_RO_SHARE:/usr/share}
+
 %prep
 %setup -q
 cp %{SOURCE1001} .
@@ -56,8 +58,8 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/license
-cp -af COPYING %{buildroot}/usr/share/license/%{name}
+mkdir -p %{buildroot}/%{TZ_SYS_RO_SHARE}/license
+cp -af COPYING %{buildroot}/%{TZ_SYS_RO_SHARE}/license/%{name}
 %make_install
 
 %remove_docs
@@ -65,7 +67,7 @@ cp -af COPYING %{buildroot}/usr/share/license/%{name}
 %files
 %manifest %{name}.manifest
 %defattr(-,root,root,-)
-/usr/share/license/%{name}
+%{TZ_SYS_RO_SHARE}/license/%{name}
 %{_libdir}/libeom.so.*
 
 %files devel
@@ -74,4 +76,5 @@ cp -af COPYING %{buildroot}/usr/share/license/%{name}
 %{_includedir}/eom/*.h
 %{_libdir}/libeom.so
 %{_libdir}/pkgconfig/eom.pc
+%{TZ_SYS_RO_SHARE}/license/%{name}
 
