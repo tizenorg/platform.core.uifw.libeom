@@ -181,7 +181,7 @@ _eom_mutex_init(void)
 		return true;
 
 	if (pthread_mutex_init(&eom_lock, NULL)) {
-		ERRNO("fail: mutex init");
+		fprintf(stderr, "fail: eom mutex init");
 		return false;
 	}
 
