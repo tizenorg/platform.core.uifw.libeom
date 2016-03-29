@@ -59,7 +59,7 @@ extern "C" {
 #endif
 /**
  * @brief Enumeration of External Output Manager (EOM) error type
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	EOM_ERROR_NONE = TIZEN_ERROR_NONE,                            /**< Success */
@@ -73,7 +73,7 @@ typedef enum {
 
 /**
  * @brief Enumeration of external output type
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	EOM_OUTPUT_TYPE_UNKNOWN,      /**< Unknown output type */
@@ -98,7 +98,7 @@ typedef enum {
 
 /**
  * @brief Enumeration of external output mode
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	EOM_OUTPUT_MODE_NONE,          /**< None */
@@ -109,7 +109,7 @@ typedef enum {
 
 /**
  * @brief Enumeration of External Output Manager (EOM) attributes
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	EOM_OUTPUT_ATTRIBUTE_NONE,             /**< None */
@@ -121,7 +121,7 @@ typedef enum {
 
 /**
  * @brief Enumeration of External Output Manager (EOM) attribute state
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	EOM_OUTPUT_ATTRIBUTE_STATE_NONE,      /**< None */
@@ -133,14 +133,14 @@ typedef enum {
 
 /**
  * @brief Definition for external output ID
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef unsigned int eom_output_id;
 
 /**
  * @brief Called when External Output Manager (EOM) module sends output
  *           connection notification.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] output_id  The output id which is connected output
  * @param[in] user_data  The pointer of user data which is passed to
  *                                   eom_output_added_cb function
@@ -152,7 +152,7 @@ typedef void (*eom_output_added_cb)(eom_output_id output_id, void *user_data);
 /**
  * @brief Called when External Output Manager (EOM) module sends output
  *           disconnection notification.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] output_id  The output id which is connected output
  * @param[in] user_data  The pointer of user data which is passed to
  *                                   eom_output_removed_cb function
@@ -164,7 +164,7 @@ typedef void (*eom_output_removed_cb)(eom_output_id output_id, void *user_data);
 /**
  * @brief Called when External Output Manager (EOM) module sends output
  *           mode changing notification.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] output_id  The output id which is connected output
  * @param[in] user_data  The pointer of user data which is passed to
  *                                   eom_mode_changed_cb function
@@ -176,7 +176,7 @@ typedef void (*eom_mode_changed_cb)(eom_output_id output_id, void *user_data);
 /**
  * @brief Called when External Output Manager (EOM) module sends output
  *           attribute changing notification.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] output_id  The output id which is connected output
  * @param[in] user_data  The pointer of user data which is passed to
  *                                   eom_attribute_changed_cb function
@@ -188,7 +188,7 @@ typedef void (*eom_attribute_changed_cb)(eom_output_id output_id, void *user_dat
 /**
  * @brief Initializes External Output Manager (EOM).
  * @details User should call this function previously for using EOM.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @remarks After all using, call eom_deinit() function for resource returning.
  * @return 0 on success, otherwise a negative error value
  * @retval #EOM_ERROR_NONE Successful
@@ -202,7 +202,7 @@ int eom_init(void);
  * @brief Finalizes External Output Manager (EOM).
  * @details User should call this function after using EOM to release all
  *              resources of EOM.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @see eom_init()
  */
 void eom_deinit(void);
@@ -210,7 +210,7 @@ void eom_deinit(void);
 /**
  * @brief Registers a callback function to get output connection notification
  *           from External Output Manager (EOM) module.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] callback  The function pointer of eom_output_added_cb callback
  *                                function
  * @param[in] user_data  The pointer of user data which is passed to
@@ -228,7 +228,7 @@ int eom_set_output_added_cb(eom_output_added_cb callback, void *user_data);
 
 /**
  * @brief Unregisters the callback function.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] callback  The function pointer of eom_output_added_cb callback
  *                                function
  * @return 0 on success, otherwise a negative error value
@@ -244,7 +244,7 @@ int eom_unset_output_added_cb(eom_output_added_cb callback);
 /**
  * @brief Registers a callback function to get output disconnection
  *           notification from External Output Manager (EOM) module.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] callback  The function pointer of eom_output_removed_cb callback
  *                                function
  * @param[in] user_data  The pointer of user data which is passed to
@@ -262,7 +262,7 @@ int eom_set_output_removed_cb(eom_output_removed_cb callback, void *user_data);
 
 /**
  * @brief Unregisters the callback function.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] callback  The function pointer of eom_output_removed_cb callback
  *                                function
  * @return 0 on success, otherwise a negative error value
@@ -278,7 +278,7 @@ int eom_unset_output_removed_cb(eom_output_removed_cb callback);
 /**
  * @brief Registers a callback function to get output mode changing
  *           notification from External Output Manager (EOM) module.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] callback  The function pointer of eom_mode_changed_cb callback
  *                                function
  * @param[in] user_data  The pointer of user data which is passed to
@@ -296,7 +296,7 @@ int eom_set_mode_changed_cb(eom_mode_changed_cb callback, void *user_data);
 
 /**
  * @brief Unregisters the callback function.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] callback  The function pointer of eom_mode_changed_cb callback
  *                                function
  * @return 0 on success, otherwise a negative error value
@@ -312,7 +312,7 @@ int eom_unset_mode_changed_cb(eom_mode_changed_cb callback);
 /**
  * @brief Registers a callback function to get output attribute changing
  *           notification from External Output Manager (EOM) module.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] callback  The function pointer of eom_attribute_changed_cb
  *                                callback function
  * @param[in] user_data  The pointer of user data which is passed to
@@ -330,7 +330,7 @@ int eom_set_attribute_changed_cb(eom_attribute_changed_cb callback, void *user_d
 
 /**
  * @brief Unregisters the callback function.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] callback  The function pointer of eom_attribute_changed_cb
  *                                callback function
  * @return 0 on success, otherwise a negative error value
@@ -349,7 +349,7 @@ int eom_unset_attribute_changed_cb(eom_attribute_changed_cb callback);
  *              available to connect to target device, and the count of them
  *              also. User can get the id of external output.
  * which user want to watch.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @remarks User should free return value by using free().
  * The specific error code can be obtained using the get_last_result() method.
  * Error codes are described in Exception section.
@@ -368,7 +368,7 @@ eom_output_id *eom_get_eom_output_ids(int *count);
 
 /**
  * @brief Gets type of external output.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @remarks The specific error code can be obtained using the get_last_result()
  * method. Error codes are described in Exception section.
  * @param[in] output_id  The id of external output device
@@ -386,7 +386,7 @@ int eom_get_output_type(eom_output_id output_id, eom_output_type_e *type);
 
 /**
  * @brief Gets mode of external output.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @remarks The specific error code can be obtained using the get_last_result()
  * method. Error codes are described in Exception section.
  * @param[in] output_id  The id of external output device
@@ -405,7 +405,7 @@ int eom_get_output_mode(eom_output_id output_id, eom_output_mode_e *mode);
 
 /**
  * @brief Gets attribute of external output.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @remarks The specific error code can be obtained using the get_last_result()
  * method. Error codes are described in Exception section.
  * @param[in] output_id  The id of external output device
@@ -424,7 +424,7 @@ int eom_get_output_attribute(eom_output_id output_id, eom_output_attribute_e *at
 
 /**
  * @brief Gets attribute state of external output.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @remarks The specific error code can be obtained using the get_last_result()
  * method. Error codes are described in Exception section.
  * @param[in] output_id  The id of external output device
@@ -443,7 +443,7 @@ int eom_get_output_attribute_state(eom_output_id output_id, eom_output_attribute
 
 /**
  * @brief Gets resolution of external output.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] output_id  The id of external output device
  * @param[out] width  The width of external output instance
  * @param[out] height  The height of external output instance
@@ -460,7 +460,7 @@ int eom_get_output_resolution(eom_output_id output_id, int *width, int *height);
 
 /**
  * @brief Gets physical width/height (millimeters) of external output.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] output_id  The id of external output device
  * @param[out] phy_width  The physical mm width of external output instance
  * @param[out] phy_height  The physical mm height of external output instance
@@ -483,7 +483,7 @@ int eom_get_output_physical_size(eom_output_id output_id, int *phy_width, int *p
  * control the policy of external output. The application can recognize
  * the attribute state and manage the resources when the application receives
  * several notification callback from EOM module.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] output_id  The id of external output device
  * @param[in] attr  The attribute of the external output
  * @return 0 on success, otherwise a negative error value
@@ -503,7 +503,7 @@ int eom_set_output_attribute(eom_output_id output_id, eom_output_attribute_e att
 /**
  * @brief Sets window to the external output best resolution of external output
  *           device.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @param[in] output_id  The id of external output device
  * @param[in] win  The pointer of evas object
  * @return 0 on success, otherwise a negative error value
