@@ -35,25 +35,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 **************************************************************************/
 
+
 /**
- * @ingroup CAPI_UI_FRAMEWORK
- * @defgroup CAPI_UI_EOM_MODULE External Output Manager
- * @brief The External Output Manager provides APIs for external outputs.
- *
- * @section CAPI_UI_EOM_MODULE_HEADER Required Header
- *   #include <eom.h>
- *
- * @section CAPI_UI_EOM_MODULE_OVERVIEW Overview
- * The External Output Manager (EOM) is for managing external outputs.\n
- * User can get the information of external outputs and control them via
- * eom API.\n\n
- *
- * Features :\n
- *  - Get information.(output ID, type, resolution, physical size etc)\n
- *  - Receive state changing informagtion by callback function. (add, remove, mode change, attribute change)\n
- *  - Use external output device.(set attribute, set external window)\n
- */
- *
- */
+  * @ingroup CAPI_UI_FRAMEWORK
+  * @defgroup CAPI_UI_EOM_MODULE External Output Manager
+  * @brief The External Output Manager provides APIs for external outputs.
+  *
+  * @section CAPI_UI_EOM_MODULE_HEADER Required Header
+  *  #include <eom.h>
+  *
+  * @section CAPI_UI_EOM_MODULE_OVERVIEW Overview
+  * The External Output Manager (EOM) is for managing external outputs.
+  * User can get the information of external outputs and control them via
+  * eom API.
+  *
+  * Features :
+  * - Get information.(output ID, type, resolution, physical size etc)
+  * - Receive state changing informagtion by callback function. (add, remove, mode change, attribute change)
+  * - - Use external output device.(set attribute, set external window)
+  *
+  **/
 
 #endif /* __UI_EOM_DOC_H__ */
+
