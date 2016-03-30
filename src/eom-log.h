@@ -85,7 +85,7 @@ static inline void set_last_result(int i) {; }
 			__func__, __LINE__, ##arg)
 #endif	 /* HAVE_DLOG */
 
-#define WARN_IF_FAIL(cond)				{if (!(cond)) { ERR("'%s' failed", #cond); } }
+#define WARN_IF_FAIL(cond)				if (!(cond)) ERR("'%s' failed", #cond);
 #define RET_IF_FAIL(cond)				{if (!(cond)) { ERR("'%s' failed", #cond); return; } }
 #define RETV_IF_FAIL(cond, val)			{if (!(cond)) { ERR("'%s' failed", #cond); return val; } }
 #define RETV_IF_ERRNO(cond, val, errno)	{if (!(cond)) { ERRNO("'%s' failed", #cond); return val; } }
