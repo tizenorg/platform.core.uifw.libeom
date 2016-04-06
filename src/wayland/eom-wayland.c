@@ -360,13 +360,25 @@ _eom_wayland_client_find_output_from_wl_output(
 	EomWaylandOutput *ret = NULL;
 
 	/* remove all eom_wl_outputs */
-	if (!wl_list_empty(eom_wl_output_list)) {
-		wl_list_for_each_safe(eom_wl_output,
-			tmp, eom_wl_output_list, link) {
-			if (eom_wl_output->output == output) {
-				ret = eom_wl_output;
-				break;
-			}
+	if (wl_list_empty(eom_wl_output_list))
+	{
+		INFO("List is empty\n");
+		return ret;
+	}
+
+	INFO("Try to find output\n");
+
+    wl_list_for_each_safe(eom_wl_output, tmp, eom_wl_output_list, link)
+    {
+    	INFO("x:%d y:%d phy_w:%d phy_h:%d subpixel:%d make:%s model:%s transform:%d\n",
+    		    			eom_wl_output->x, eom_wl_output->y, eom_wl_output->physical_width,
+    						eom_wl_output->physical_height, eom_wl_output->subpixel,
+    						eom_wl_output->make, eom_wl_output->model, eom_wl_output->transform);
+
+	    if (eom_wl_output->output == output)
+	    {
+		    ret = eom_wl_output;
+			break;
 		}
 	}
 
@@ -486,15 +498,17 @@ static const struct wl_output_listener eom_wl_output_listener = {
 static void
 _eom_wl_eom_output_type(void *data,
 			struct wl_eom *wl_eom,
-			struct wl_output *output,
+			uint32_t output,
 			uint32_t type,
 			uint32_t status)
 {
 	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
+	INFO("TYPE: %d\n", output);
+
 	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
-		&eom_client_info->eom_wl_output_list, output);
+		&eom_client_info->eom_wl_output_list, NULL);
 	RET_IF_FAIL(eom_wl_output != NULL);
 
 	/* save the output type */
