@@ -342,28 +342,26 @@ _eom_wayland_client_call_notify(EomWaylandOutput *eom_wl_output,
 	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
-	if (eom_wl_output->client_info->func)
+	if (eom_wl_output->client_info && eom_wl_output->client_info->func)
 		eom_wl_output->client_info->func(NULL, array);
 
 	if (array)
 		g_array_free(array, FALSE);
-
 }
 
 
 static EomWaylandOutput *
 _eom_wayland_client_find_output_from_wl_output(
-		struct wl_list *eom_wl_output_list, struct wl_output *output)
+		struct wl_list *eom_wl_output_list, int output_id)
 {
 	EomWaylandOutput *eom_wl_output = NULL;
 	EomWaylandOutput *tmp = NULL;
 	EomWaylandOutput *ret = NULL;
 
-	/* remove all eom_wl_outputs */
 	if (!wl_list_empty(eom_wl_output_list)) {
 		wl_list_for_each_safe(eom_wl_output,
 			tmp, eom_wl_output_list, link) {
-			if (eom_wl_output->output == output) {
+			if (eom_wl_output->id == output_id) {
 				ret = eom_wl_output;
 				break;
 			}
@@ -381,7 +379,6 @@ _eom_wayland_client_find_output_from_eom_output(
 	EomWaylandOutput *tmp = NULL;
 	EomWaylandOutput *ret = NULL;
 
-	/* remove all eom_wl_outputs */
 	if (!wl_list_empty(eom_wl_output_list)) {
 		wl_list_for_each_safe(eom_wl_output,
 			tmp, eom_wl_output_list, link) {
@@ -486,15 +483,17 @@ static const struct wl_output_listener eom_wl_output_listener = {
 static void
 _eom_wl_eom_output_type(void *data,
 			struct wl_eom *wl_eom,
-			struct wl_output *output,
+			uint32_t output_id,
 			uint32_t type,
 			uint32_t status)
 {
 	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
+	INFO("TYPE");
+
 	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
-		&eom_client_info->eom_wl_output_list, output);
+		&eom_client_info->eom_wl_output_list, output_id);
 	RET_IF_FAIL(eom_wl_output != NULL);
 
 	/* save the output type */
@@ -517,14 +516,16 @@ _eom_wl_eom_output_type(void *data,
 static void
 _eom_wl_eom_output_mode(void *data,
 			struct wl_eom *wl_eom,
-			struct wl_output *output,
+			uint32_t output_id,
 			uint32_t mode)
 {
 	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
+	INFO("MODE");
+
 	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
-		&eom_client_info->eom_wl_output_list, output);
+		&eom_client_info->eom_wl_output_list, output_id);
 	RET_IF_FAIL(eom_wl_output != NULL);
 
 	/* check the eom mode and call the notify */
@@ -539,7 +540,7 @@ _eom_wl_eom_output_mode(void *data,
 static void
 _eom_wl_eom_output_attribute(void *data,
 			 struct wl_eom *wl_eom,
-			 struct wl_output *output,
+			 uint32_t output_id,
 			 uint32_t attribute,
 			 uint32_t attribute_state,
 			 uint32_t error)
@@ -547,8 +548,10 @@ _eom_wl_eom_output_attribute(void *data,
 	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
+	INFO("ATTRIBUTE");
+
 	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
-		&eom_client_info->eom_wl_output_list, output);
+		&eom_client_info->eom_wl_output_list, output_id);
 	RET_IF_FAIL(eom_wl_output != NULL);
 
 	/* check the eom attribute and call the notify */
@@ -663,7 +666,8 @@ _eom_wayland_client_initialize()
 		wl_list_for_each_safe(eom_wl_output, tmp,
 			&wl_client_info.eom_wl_output_list, link) {
 			if (eom_wl_output->eom_type == WL_EOM_TYPE_NONE) {
-				WARN("[EOM_CLIENT] eom_type is NONE. remove.\n");
+				WARN("[EOM_CLIENT] eom_type is NONE. remove output:%d\n",
+					eom_wl_output->id);
 				wl_output_destroy(eom_wl_output->output);
 				wl_list_remove(&eom_wl_output->link);
 				free(eom_wl_output);
@@ -753,7 +757,6 @@ eom_wayland_client_get_output_ids(void)
 
 	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 
-	/* remove all eom_wl_outputs */
 	wl_list_for_each_safe(eom_wl_output, tmp,
 		&wl_client_info.eom_wl_output_list, link) {
 		if (eom_wl_output->output) {
@@ -840,7 +843,7 @@ eom_wayland_client_set_attribute(eom_output_id output_id,
 		&wl_client_info.eom_wl_output_list, output_id);
 	GOTO_IF_FAIL(eom_wl_output != NULL, fail);
 
-	wl_eom_set_attribute(wl_client_info.eom, eom_wl_output->output,
+	wl_eom_set_attribute(wl_client_info.eom, eom_wl_output->id,
 		_convert_to_wl_eom_attribute(attr));
 
 	/* TODO:
