@@ -49,7 +49,7 @@ extern "C" {
 #include <stdbool.h>
 #include <string.h>
 #include <tizen.h>
-#include <Elementary.h>
+#include <Evas.h>
 
 /**
  * @file eom.h

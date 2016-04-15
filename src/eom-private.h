@@ -36,6 +36,7 @@
 #define __EOM_PRIVATE_H__
 
 #include "eom.h"
+#include <Elementary.h>
 
 typedef struct {
 	eom_output_id id;
