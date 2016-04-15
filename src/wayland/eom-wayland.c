@@ -481,16 +481,71 @@ static const struct wl_output_listener eom_wl_output_listener = {
 };
 
 static void
+_eom_wl_eom_output_count(void *data,
+			struct wl_eom *wl_eom,
+			uint32_t count)
+{
+	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *)data;
+	/*EomWaylandOutput *eom_wl_output = NULL;*/
+
+	INFO("COUNT - %d", count);
+
+	if (count == 0) {
+		INFO("not support external output");
+		return;
+	}
+
+	eom_client_info->num_outputs = count;
+}
+
+static void
+_eom_wl_eom_output_info(void *data,
+			struct wl_eom *wl_eom,
+			uint32_t output_id,
+			uint32_t type,
+			uint32_t mode,
+			uint32_t w,
+			uint32_t h,
+			uint32_t w_mm,
+			uint32_t h_mm,
+			uint32_t connection)
+{
+	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
+	EomWaylandOutput *eom_wl_output = NULL;
+
+	INFO("INFO - id : %d, type : %d, mode : %d, w : %d, h : %d, w_mm : %d, h_mm : %d, conn : %d\n",
+		output_id, type, mode, w, h, w_mm, h_mm, connection);
+
+	/* make external output info */
+	eom_wl_output = calloc(1, sizeof(EomWaylandOutput));
+	if (!eom_wl_output) {
+		ERR("Fail to allocate the eom_output.\n");
+		return;
+	}
+
+	eom_wl_output->id = output_id;
+	eom_wl_output->eom_type = type;
+	eom_wl_output->eom_mode = mode;
+	eom_wl_output->width = w;
+	eom_wl_output->height = h;
+	eom_wl_output->physical_width = w_mm;
+	eom_wl_output->physical_height = h_mm;
+	eom_wl_output->eom_status = connection;
+
+	wl_list_insert(&eom_client_info->eom_wl_output_list, &eom_wl_output->link);
+}
+
+static void
 _eom_wl_eom_output_type(void *data,
 			struct wl_eom *wl_eom,
 			uint32_t output_id,
 			uint32_t type,
 			uint32_t status)
 {
-	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
+	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *)data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
-	INFO("TYPE");
+	INFO("TYPE - id : %d, type : %d, status : %d\n", output_id, type, status);
 
 	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
 		&eom_client_info->eom_wl_output_list, output_id);
@@ -519,10 +574,10 @@ _eom_wl_eom_output_mode(void *data,
 			uint32_t output_id,
 			uint32_t mode)
 {
-	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
+	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *)data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
-	INFO("MODE");
+	INFO("MODE - id : %d, mode : %d\n", output_id, mode);
 
 	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
 		&eom_client_info->eom_wl_output_list, output_id);
@@ -545,10 +600,10 @@ _eom_wl_eom_output_attribute(void *data,
 			 uint32_t attribute_state,
 			 uint32_t error)
 {
-	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
+	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *)data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
-	INFO("ATTRIBUTE");
+	INFO("ATTRIBUTE - id : %d, attribute : %d, state : %d\n", output_id, attribute, attribute_state);
 
 	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
 		&eom_client_info->eom_wl_output_list, output_id);
@@ -567,6 +622,8 @@ _eom_wl_eom_output_attribute(void *data,
 
 
 static const struct wl_eom_listener eom_wl_eom_listener = {
+	_eom_wl_eom_output_count,
+	_eom_wl_eom_output_info,
 	_eom_wl_eom_output_type,
 	_eom_wl_eom_output_mode,
 	_eom_wl_eom_output_attribute,
@@ -578,7 +635,7 @@ _eom_wl_registry_handle_global(void *data, struct wl_registry *registry,
 		uint32_t name, const char *interface, uint32_t version)
 {
 	EomWaylandClientInfo *ci = (EomWaylandClientInfo *)data;
-	EomWaylandOutput *eom_wl_output = NULL;
+	/*EomWaylandOutput *eom_wl_output = NULL;*/
 	struct wl_output *output = NULL;
 	struct wl_eom *eom = NULL;
 
@@ -589,7 +646,7 @@ _eom_wl_registry_handle_global(void *data, struct wl_registry *registry,
 			ERR("Error. fail to bind  %s.\n", interface);
 		else {
 			INFO("bind %s.\n", interface);
-
+#if 0
 			/* create the eom_wl_output */
 			eom_wl_output = calloc(1, sizeof(EomWaylandOutput));
 			if (!eom_wl_output) {
@@ -605,6 +662,7 @@ _eom_wl_registry_handle_global(void *data, struct wl_registry *registry,
 			/* add listener */
 			wl_output_add_listener(eom_wl_output->output,
 				&eom_wl_output_listener, eom_wl_output);
+#endif
 		}
 	} else if (strcmp(interface, "wl_eom") == 0) {
 		eom = wl_registry_bind(registry, name, &wl_eom_interface, 1);
@@ -657,7 +715,7 @@ _eom_wayland_client_initialize()
 		&eom_registry_listener, &wl_client_info);
 	wl_display_dispatch(wl_client_info.display);
 	wl_display_roundtrip(wl_client_info.display);
-
+#if 0
 	/* remove type none eom_wl_outputs */
 	if (!wl_list_empty(&wl_client_info.eom_wl_output_list)) {
 		EomWaylandOutput *eom_wl_output = NULL;
@@ -675,6 +733,9 @@ _eom_wayland_client_initialize()
 			}
 		}
 	}
+#endif
+	if (wl_client_info.num_outputs == 0)
+		WARN("[EOM_CLIENT] not support external output at this device.\n");
 
 	/* output list */
 	if (wl_list_empty(&wl_client_info.eom_wl_output_list))
@@ -703,7 +764,6 @@ _eom_wayland_client_deinitialize()
 			eom_wl_output = NULL;
 		}
 	}
-
 	ecore_wl_shutdown();
 
 	INFO("[EOM_CLIENT] wayland client deinit.");
@@ -759,7 +819,8 @@ eom_wayland_client_get_output_ids(void)
 
 	wl_list_for_each_safe(eom_wl_output, tmp,
 		&wl_client_info.eom_wl_output_list, link) {
-		if (eom_wl_output->output) {
+
+		if (eom_wl_output) {
 			g_value_init(&v, G_TYPE_INT);
 			g_value_set_int(&v, eom_wl_output->id);
 			array = g_array_append_val(array, v);
@@ -823,6 +884,12 @@ eom_wayland_client_get_output_info(eom_output_id output_id)
 	/* 6:h_mm */
 	g_value_init(&v, G_TYPE_INT);
 	g_value_set_int(&v, eom_wl_output->physical_height);
+	array = g_array_append_val(array, v);
+	g_value_unset(&v);
+
+	/* 7:attribute */
+	g_value_init(&v, G_TYPE_INT);
+	g_value_set_int(&v, eom_wl_output->eom_attribute);
 	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
