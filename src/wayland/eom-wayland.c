@@ -481,6 +481,40 @@ static const struct wl_output_listener eom_wl_output_listener = {
 };
 
 static void
+_eom_wl_eom_output_count(void *data,
+			struct wl_eom *wl_eom,
+			uint32_t count)
+{
+/*	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;*/
+/*	EomWaylandOutput *eom_wl_output = NULL;*/
+
+	INFO("COUNT - %d", count);
+
+	/* TODO : make output list if (count > 0) */
+}
+
+static void
+_eom_wl_eom_output_info(void *data,
+			struct wl_eom *wl_eom,
+			uint32_t output_id,
+			uint32_t type,
+			uint32_t mode,
+			uint32_t w,
+			uint32_t h,
+			uint32_t w_mm,
+			uint32_t h_mm,
+			uint32_t connection)
+{
+/*	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;*/
+/*	EomWaylandOutput *eom_wl_output = NULL;*/
+
+	INFO("INFO - id : %d, type : %d, mode : %d, w : %d, h : %d, w_mm : %d, h_mm : %d, conn : %d\n",
+		output_id, type, mode, w, h, w_mm, h_mm, connection);
+
+	/* TODO : save output info to list */
+}
+
+static void
 _eom_wl_eom_output_type(void *data,
 			struct wl_eom *wl_eom,
 			uint32_t output_id,
@@ -490,7 +524,7 @@ _eom_wl_eom_output_type(void *data,
 	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
-	INFO("TYPE");
+	INFO("TYPE - id : %d, type : %d, status : %d\n", output_id, type, status);
 
 	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
 		&eom_client_info->eom_wl_output_list, output_id);
@@ -522,7 +556,7 @@ _eom_wl_eom_output_mode(void *data,
 	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
-	INFO("MODE");
+	INFO("MODE - id : %d, mode : %d\n", output_id, mode);
 
 	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
 		&eom_client_info->eom_wl_output_list, output_id);
@@ -548,7 +582,7 @@ _eom_wl_eom_output_attribute(void *data,
 	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
-	INFO("ATTRIBUTE");
+	INFO("ATTRIBUTE - id : %d, attribute : %d, state : %d\n", output_id, attribute, attribute_state);
 
 	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
 		&eom_client_info->eom_wl_output_list, output_id);
@@ -567,6 +601,8 @@ _eom_wl_eom_output_attribute(void *data,
 
 
 static const struct wl_eom_listener eom_wl_eom_listener = {
+	_eom_wl_eom_output_count,
+	_eom_wl_eom_output_info,
 	_eom_wl_eom_output_type,
 	_eom_wl_eom_output_mode,
 	_eom_wl_eom_output_attribute,
