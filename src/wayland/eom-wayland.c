@@ -875,8 +875,14 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 	GValue v = G_VALUE_INIT;
 	Ecore_Wl_Window *e_wl_win = NULL;
 	EomWaylandOutput *eom_wl_output = NULL;
+
+#ifdef USE_EOM_SET_WIN
+	struct wl_surface *surface = NULL;
+#else
 	struct wl_shell_surface *shell_surface = NULL;
 	struct xdg_surface *xdg_shell_surface = NULL;
+#endif
+
 	int ret = 0;
 
 	e_wl_win = elm_win_wl_window_get(win);
@@ -887,6 +893,15 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 	GOTO_IF_FAIL(eom_wl_output != NULL, fail);
 
 	/* set full screen at output */
+#ifdef USE_EOM_SET_WIN
+	surface = ecore_wl_window_surface_get(e_wl_win);
+	if (surface) {
+		eom_set_output_window(wl_client_info.eom, surface, eom_wl_output->output)
+	} else {
+		ERR("no wl surface.\n");
+		goto fail;
+	}
+#else
 	xdg_shell_surface = ecore_wl_window_xdg_surface_get(e_wl_win);
 	if (xdg_shell_surface) {
 		xdg_surface_set_fullscreen(xdg_shell_surface,
@@ -902,6 +917,7 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 			goto fail;
 		}
 	}
+#endif
 
 	ret = 1;
 
