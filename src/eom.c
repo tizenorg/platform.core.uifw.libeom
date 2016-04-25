@@ -549,7 +549,7 @@ eom_deinit(void)
 
 	/* TODO: redesign the life-cycle of output_infos */
 	/* destory output_info. */
-	for (l = output_info_list; l; l = g_list_next(l)) {
+	for (l = output_info_list; l; l = output_info_list) {
 		eom_output_info *output_info = (eom_output_info *)l->data;
 
 		output_info_list = g_list_remove(output_info_list, output_info);
