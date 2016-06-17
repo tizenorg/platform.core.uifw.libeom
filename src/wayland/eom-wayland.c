@@ -51,6 +51,7 @@ typedef struct _EomWaylandClientInfo {
 
 	/* eom wayland output list */
 	struct wl_list eom_wl_output_list;
+	struct wl_list eom_output_list;
 	int num_outputs;
 
 	notify_func func;
@@ -66,6 +67,7 @@ typedef struct _EomWaylandOutput {
 	int32_t physical_width;
 	int32_t physical_height;
 	enum wl_output_subpixel subpixel;
+	const char *output_name;
 	const char *make;
 	const char *model;
 	enum wl_output_transform transform;
@@ -89,6 +91,14 @@ typedef struct _EomWaylandOutput {
 
 	struct wl_list link;
 } EomWaylandOutput;
+
+typedef struct _EomOutput {
+	struct wl_output *output;
+	const char *model;
+	int name;
+
+	struct wl_list link;
+} EomOutput;
 
 static EomWaylandClientInfo wl_client_info;
 static int eom_wayland_init;
@@ -392,6 +402,50 @@ _eom_wayland_client_find_output_from_eom_output(
 	return ret;
 }
 
+static EomOutput *
+_eom_wayland_client_find_eom_output_from_name(
+		struct wl_list *eom_output_list, int name)
+{
+	EomOutput *eom_output = NULL;
+	EomOutput *tmp = NULL;
+	EomOutput *ret = NULL;
+
+	if (!wl_list_empty(eom_output_list)) {
+		wl_list_for_each_safe(eom_output,
+			tmp, eom_output_list, link) {
+			if (eom_output->name == name) {
+				ret = eom_output;
+				break;
+			}
+		}
+	}
+
+	return ret;
+}
+
+static EomOutput *
+_eom_wayland_client_find_eom_output_from_output(
+		struct wl_list *eom_output_list,
+		EomWaylandOutput *eom_wl_output)
+{
+	EomOutput *eom_output = NULL;
+	EomOutput *tmp = NULL;
+	EomOutput *ret = NULL;
+
+	if (!wl_list_empty(eom_output_list)) {
+		wl_list_for_each_safe(eom_output,
+			tmp, eom_output_list, link) {
+			if (strcmp(eom_output->model,
+					   eom_wl_output->output_name)
+					   == 0) {
+				ret = eom_output;
+				break;
+			}
+		}
+	}
+
+	return ret;
+}
 
 static void
 _eom_wl_output_handle_geometry(void *data,
@@ -405,6 +459,12 @@ _eom_wl_output_handle_geometry(void *data,
 			const char *model,
 			int32_t transform)
 {
+	EomOutput *eom_output = (EomOutput *) data;
+
+	if (model && !eom_output->model)
+		eom_output->model = strdup(model);
+
+#if 0
 	EomWaylandOutput *eom_wl_output = (EomWaylandOutput *) data;
 
 	INFO("wl_output:%p x:%d y:%d phy(w:%d h:%d) p:%d m:%s model:%s t:%d\n",
@@ -424,7 +484,7 @@ _eom_wl_output_handle_geometry(void *data,
 		eom_wl_output->subpixel = subpixel;
 	if (eom_wl_output->transform)
 		eom_wl_output->transform = transform;
-
+#endif
 }
 
 
@@ -436,6 +496,7 @@ _eom_wl_output_handle_mode(void *data,
 			int32_t height,
 			int32_t refresh)
 {
+#if 0
 	EomWaylandOutput *eom_wl_output = (EomWaylandOutput *) data;
 
 	INFO("wl_output:%p flags:%d width:%d height:%d refresh:%d\n",
@@ -450,13 +511,16 @@ _eom_wl_output_handle_mode(void *data,
 		eom_wl_output->height = height;
 	if (eom_wl_output->refresh != refresh)
 		eom_wl_output->refresh = refresh;
+#endif
 }
 
 static void
 _eom_wl_output_handle_done(void *data,
 			struct wl_output *wl_output)
 {
+#if 0
 	INFO("wl_output:%p\n", wl_output);
+#endif
 }
 
 static void
@@ -464,6 +528,7 @@ _eom_wl_output_handle_scale(void *data,
 			struct wl_output *wl_output,
 			int32_t factor)
 {
+#if 0
 	EomWaylandOutput *eom_wl_output = (EomWaylandOutput *) data;
 
 	INFO("wl_output:%p factor:%d\n", wl_output, factor);
@@ -471,6 +536,7 @@ _eom_wl_output_handle_scale(void *data,
 	/* save vaules if it is different before */
 	if (eom_wl_output->factor != factor)
 		eom_wl_output->factor = factor;
+#endif
 }
 
 static const struct wl_output_listener eom_wl_output_listener = {
@@ -508,13 +574,14 @@ _eom_wl_eom_output_info(void *data,
 			uint32_t h,
 			uint32_t w_mm,
 			uint32_t h_mm,
-			uint32_t connection)
+			uint32_t connection,
+		    const char *output_name)
 {
 	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *) data;
 	EomWaylandOutput *eom_wl_output = NULL;
 
-	INFO("INFO - id : %d, type : %d, mode : %d, w : %d, h : %d, w_mm : %d, h_mm : %d, conn : %d\n",
-		output_id, type, mode, w, h, w_mm, h_mm, connection);
+	INFO("INFO - id : %d, type : %d, mode : %d, w : %d, h : %d, w_mm : %d, h_mm : %d, conn : %d name : %s\n",
+		output_id, type, mode, w, h, w_mm, h_mm, connection, output_name);
 
 	/* make external output info */
 	eom_wl_output = calloc(1, sizeof(EomWaylandOutput));
@@ -531,6 +598,7 @@ _eom_wl_eom_output_info(void *data,
 	eom_wl_output->physical_width = w_mm;
 	eom_wl_output->physical_height = h_mm;
 	eom_wl_output->eom_status = connection;
+	eom_wl_output->output_name = strdup(output_name);
 
 	wl_list_insert(&eom_client_info->eom_wl_output_list, &eom_wl_output->link);
 }
@@ -634,8 +702,8 @@ static void
 _eom_wl_registry_handle_global(void *data, struct wl_registry *registry,
 		uint32_t name, const char *interface, uint32_t version)
 {
-	EomWaylandClientInfo *ci = (EomWaylandClientInfo *)data;
-	/*EomWaylandOutput *eom_wl_output = NULL;*/
+	EomWaylandClientInfo *client_info = (EomWaylandClientInfo *)data;
+	EomOutput *eom_output = NULL;
 	struct wl_output *output = NULL;
 	struct wl_eom *eom = NULL;
 
@@ -646,23 +714,23 @@ _eom_wl_registry_handle_global(void *data, struct wl_registry *registry,
 			ERR("Error. fail to bind  %s.\n", interface);
 		else {
 			INFO("bind %s.\n", interface);
-#if 0
-			/* create the eom_wl_output */
-			eom_wl_output = calloc(1, sizeof(EomWaylandOutput));
-			if (!eom_wl_output) {
+			INFO("wl_output: %p\n", output);
+
+			eom_output = calloc(1, sizeof(EomOutput));
+			if (!eom_output) {
 				ERR("Fail to allocate the eom_output.\n");
 				return;
 			}
-			ci->num_outputs++;
-			eom_wl_output->id = ci->num_outputs;
-			eom_wl_output->output = output;
-			wl_list_insert(&ci->eom_wl_output_list,
-				&eom_wl_output->link);
+
+			eom_output->output = output;
+			eom_output->name = name;
+
+			wl_list_insert(&client_info->eom_output_list,
+				&eom_output->link);
 
 			/* add listener */
-			wl_output_add_listener(eom_wl_output->output,
-				&eom_wl_output_listener, eom_wl_output);
-#endif
+			wl_output_add_listener(eom_output->output,
+				&eom_wl_output_listener, eom_output);
 		}
 	} else if (strcmp(interface, "wl_eom") == 0) {
 		eom = wl_registry_bind(registry, name, &wl_eom_interface, 1);
@@ -671,10 +739,11 @@ _eom_wl_registry_handle_global(void *data, struct wl_registry *registry,
 		else {
 			INFO("bind %s.\n", interface);
 
-			ci->eom = eom;
+			client_info->eom = eom;
 
 			/* add listener */
-			wl_eom_add_listener(ci->eom, &eom_wl_eom_listener, ci);
+			wl_eom_add_listener(client_info->eom, &eom_wl_eom_listener,
+					client_info);
 		}
 	} else
 		INFO("Not bind %s.\n", interface);
@@ -684,7 +753,21 @@ static void
 _eom_wl_registry_handle_global_remove(void *data,
 		struct wl_registry *registry, uint32_t name)
 {
+	EomWaylandClientInfo *client_info = (EomWaylandClientInfo *)data;
+	EomOutput *eom_output = NULL;
 
+	eom_output = _eom_wayland_client_find_eom_output_from_name(
+			&client_info->eom_output_list, name);
+	if (eom_output)
+	{
+		if (eom_output->model)
+			free((void *)eom_output->model);
+
+		if (eom_output->output)
+			wl_output_destroy(eom_output->output);
+
+		free(eom_output);
+	}
 }
 
 static const struct wl_registry_listener eom_registry_listener = {
@@ -701,6 +784,7 @@ _eom_wayland_client_initialize()
 	GOTO_IF_FAIL(ecore_count > 0, fail);
 
 	wl_list_init(&wl_client_info.eom_wl_output_list);
+	wl_list_init(&wl_client_info.eom_output_list);
 
 	wl_client_info.display = ecore_wl_display_get();
 	GOTO_IF_FAIL(wl_client_info.display != NULL, fail);
@@ -942,6 +1026,7 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 	GValue v = G_VALUE_INIT;
 	Ecore_Wl_Window *e_wl_win = NULL;
 	EomWaylandOutput *eom_wl_output = NULL;
+	EomOutput *eom_output = NULL;
 	struct wl_shell_surface *shell_surface = NULL;
 	struct xdg_surface *xdg_shell_surface = NULL;
 	int ret = 0;
@@ -949,21 +1034,35 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 	e_wl_win = elm_win_wl_window_get(win);
 	GOTO_IF_FAIL(e_wl_win != NULL, fail);
 
+	INFO("set_win: 1\n");
+
 	eom_wl_output =	_eom_wayland_client_find_output_from_eom_output(
 		&wl_client_info.eom_wl_output_list, output_id);
 	GOTO_IF_FAIL(eom_wl_output != NULL, fail);
 
+	INFO("set_win: 2\n");
+
+	/* TODO: is there other way? */
+	eom_output = _eom_wayland_client_find_eom_output_from_output(
+			&wl_client_info.eom_output_list, eom_wl_output);
+	GOTO_IF_FAIL(eom_output != NULL || eom_output->output != NULL, fail);
+
+	INFO("set_win: 3\n");
+
 	/* set full screen at output */
 	xdg_shell_surface = ecore_wl_window_xdg_surface_get(e_wl_win);
 	if (xdg_shell_surface) {
+
+		INFO("set_win: 4 %p\n", eom_output->output);
+
 		xdg_surface_set_fullscreen(xdg_shell_surface,
-			eom_wl_output->output);
+			eom_output->output);
 	} else {
 		shell_surface = ecore_wl_window_shell_surface_get(e_wl_win);
 		if (shell_surface) {
 			wl_shell_surface_set_fullscreen(shell_surface,
 				WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT,
-				0, eom_wl_output->output);
+				0, eom_output->output);
 		} else {
 			ERR("no wl surface.\n");
 			goto fail;
