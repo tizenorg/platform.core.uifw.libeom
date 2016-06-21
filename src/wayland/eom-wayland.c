@@ -698,7 +698,7 @@ _eom_wayland_client_initialize()
 	int ecore_count = -1;
 
 	ecore_count = ecore_wl_init(NULL);
-	GOTO_IF_FAIL(ecore_count > 0, fail);
+	RETV_IF_FAIL(ecore_count > 0, false);
 
 	wl_list_init(&wl_client_info.eom_wl_output_list);
 
@@ -745,6 +745,14 @@ _eom_wayland_client_initialize()
 
 	return true;
 fail:
+
+	if (wl_client_info.registry) {
+		wl_registry_destroy(wl_client_info.registry);
+		wl_client_info.registry = NULL;
+	}
+
+	ecore_wl_shutdown();
+
 	return false;
 }
 
@@ -763,6 +771,11 @@ _eom_wayland_client_deinitialize()
 			free(eom_wl_output);
 			eom_wl_output = NULL;
 		}
+	}
+
+	if (wl_client_info.registry) {
+		wl_registry_destroy(wl_client_info.registry);
+		wl_client_info.registry = NULL;
 	}
 	ecore_wl_shutdown();
 

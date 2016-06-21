@@ -105,6 +105,7 @@ typedef struct {
 } eom_output_notify_cb_info;
 
 bool eom_debug_on;
+static bool eom_mutex_init;
 
 static pthread_mutex_t eom_lock;
 
@@ -175,9 +176,7 @@ _eom_get_debug_evn(void)
 static bool
 _eom_mutex_init(void)
 {
-	static bool init;
-
-	if (init)
+	if (eom_mutex_init)
 		return true;
 
 	if (pthread_mutex_init(&eom_lock, NULL)) {
@@ -185,7 +184,23 @@ _eom_mutex_init(void)
 		return false;
 	}
 
-	init = true;
+	eom_mutex_init = true;
+
+	return true;
+}
+
+static bool
+_eom_mutex_destory(void)
+{
+	if (!eom_mutex_init)
+		return true;
+
+	if (pthread_mutex_destroy(&eom_lock)) {
+		fprintf(stderr, "fail: eom mutex destory");
+		return false;
+	}
+
+	eom_mutex_init = false;
 
 	return true;
 }
@@ -538,7 +553,7 @@ eom_init(void)
 API void
 eom_deinit(void)
 {
-	GList *l;
+	GList *l = NULL;
 
 	_eom_mutex_lock();
 #ifdef HAVE_WAYLAND
@@ -546,6 +561,13 @@ eom_deinit(void)
 #else
 	eom_dbus_client_deinit(cb_info_list);
 #endif
+	for (l = cb_info_list; l; l = cb_info_list) {
+		eom_output_notify_cb_info *cb_info = (eom_output_notify_cb_info *)l->data;
+
+		cb_info_list = g_list_remove(cb_info_list, cb_info);
+		free(cb_info);
+	}
+	cb_info_list = NULL;
 
 	/* TODO: redesign the life-cycle of output_infos */
 	/* destory output_info. */
@@ -556,8 +578,11 @@ eom_deinit(void)
 
 		_eom_free_output_info(&output_info);
 	}
+	output_info_list = NULL;
 
 	_eom_mutex_unlock();
+
+	_eom_mutex_destory();
 
 	INFO("eom deinit");
 }
