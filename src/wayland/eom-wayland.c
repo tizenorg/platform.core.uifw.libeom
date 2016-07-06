@@ -956,14 +956,11 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 	/* set full screen at output */
 	xdg_shell_surface = ecore_wl_window_xdg_surface_get(e_wl_win);
 	if (xdg_shell_surface) {
-		xdg_surface_set_fullscreen(xdg_shell_surface,
-			eom_wl_output->output);
+		wl_eom_set_xdg_window(wl_client_info.eom, output_id, xdg_shell_surface);
 	} else {
 		shell_surface = ecore_wl_window_shell_surface_get(e_wl_win);
 		if (shell_surface) {
-			wl_shell_surface_set_fullscreen(shell_surface,
-				WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT,
-				0, eom_wl_output->output);
+			wl_eom_set_shell_window(wl_client_info.eom, output_id, shell_surface);
 		} else {
 			ERR("no wl surface.\n");
 			goto fail;
