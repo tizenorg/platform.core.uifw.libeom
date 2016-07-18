@@ -218,7 +218,7 @@ struct wl_eom_listener {
 				 uint32_t attribute_state,
 				 uint32_t error);
 };
-
+/*LCOV_EXCL_START*/
 static inline int
 wl_eom_add_listener(struct wl_eom *wl_eom,
 		    const struct wl_eom_listener *listener, void *data)
@@ -226,7 +226,7 @@ wl_eom_add_listener(struct wl_eom *wl_eom,
 	return wl_proxy_add_listener((struct wl_proxy *) wl_eom,
 				     (void (**)(void)) listener, data);
 }
-
+/*LCOV_EXCL_STOP*/
 #define WL_EOM_SET_ATTRIBUTE	0
 #define WL_EOM_SET_XDG_WINDOW	1
 #define WL_EOM_SET_SHELL_WINDOW	2
@@ -260,28 +260,30 @@ wl_eom_destroy(struct wl_eom *wl_eom)
 {
 	wl_proxy_destroy((struct wl_proxy *) wl_eom);
 }
-
+/*LCOV_EXCL_START*/
 static inline void
 wl_eom_set_attribute(struct wl_eom *wl_eom, uint32_t output_id, uint32_t attribute)
 {
 	wl_proxy_marshal((struct wl_proxy *) wl_eom,
 			 WL_EOM_SET_ATTRIBUTE, output_id, attribute);
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static inline void
 wl_eom_set_xdg_window(struct wl_eom *wl_eom, uint32_t output_id, struct xdg_surface *surface)
 {
 	wl_proxy_marshal((struct wl_proxy *) wl_eom,
 			 WL_EOM_SET_XDG_WINDOW, output_id, surface);
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static inline void
 wl_eom_set_shell_window(struct wl_eom *wl_eom, uint32_t output_id, struct wl_shell_surface *surface)
 {
 	wl_proxy_marshal((struct wl_proxy *) wl_eom,
 			 WL_EOM_SET_SHELL_WINDOW, output_id, surface);
 }
-
+/*LCOV_EXCL_STOP*/
 static inline void
 wl_eom_get_output_info(struct wl_eom *wl_eom, uint32_t output_id)
 {

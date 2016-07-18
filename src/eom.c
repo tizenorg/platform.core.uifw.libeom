@@ -114,6 +114,7 @@ static GList *output_info_list;
 static void _eom_output_process_notify_cb(void *data, GArray *array);
 static eom_output_info *_eom_find_output_info(eom_output_id output_id);
 static eom_output_info *_eom_alloc_output_info(int output_id, int output_type);
+/*LCOV_EXCL_START*/
 static const char*
 TYPE(eom_output_type_e output_type)
 {
@@ -154,20 +155,20 @@ TYPE(eom_output_type_e output_type)
 		return "UNKNOWN";
 	}
 }
-
+/*LCOV_EXCL_STOP*/
 static void
 _eom_get_debug_evn(void)
 {
 	char *env = getenv("EOM_DEBUG");
 
 	if (env) {
-		eom_debug_on = (atoi(env) > 0) ? true : false;
+		eom_debug_on = (atoi(env) > 0) ? true : false;/*LCOV_EXCL_LINE*/
 #ifdef HAVE_DLOG
-		fprintf(stderr, "eom dlog on\n");
+		fprintf(stderr, "eom dlog on\n");/*LCOV_EXCL_LINE*/
 #else
-		fprintf(stderr, "eom dlog off\n");
+		fprintf(stderr, "eom dlog off\n");/*LCOV_EXCL_LINE*/
 #endif
-		INFO("EOM_DEBUG = %s", env);
+		INFO("EOM_DEBUG = %s", env);/*LCOV_EXCL_LINE*/
 	} else
 		eom_debug_on = 0;
 }
@@ -181,8 +182,8 @@ _eom_mutex_init(void)
 		return true;
 
 	if (pthread_mutex_init(&eom_lock, NULL)) {
-		fprintf(stderr, "fail: eom mutex init");
-		return false;
+		fprintf(stderr, "fail: eom mutex init");/*LCOV_EXCL_LINE*/
+		return false;/*LCOV_EXCL_LINE*/
 	}
 
 	init = true;
@@ -204,7 +205,7 @@ _eom_mutex_unlock(void)
 {
 	pthread_mutex_unlock(&eom_lock);
 }
-
+/*LCOV_EXCL_START*/
 static void
 _eom_set_output_info_mode(eom_output_info *output_info,
 		int output_mode)
@@ -216,7 +217,8 @@ _eom_set_output_info_mode(eom_output_info *output_info,
 
 	output_info->output_mode = output_mode;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_set_output_attribute(eom_output_info *output_info,
 		eom_output_attribute_e attribute)
@@ -225,7 +227,8 @@ _eom_set_output_attribute(eom_output_info *output_info,
 
 	output_info->attribute = attribute;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_set_output_attribute_state(eom_output_info *output_info,
 		eom_output_attribute_state_e state)
@@ -234,7 +237,8 @@ _eom_set_output_attribute_state(eom_output_info *output_info,
 
 	output_info->state = state;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_set_output_info_size(eom_output_info *output_info,
 		int w, int h)
@@ -244,7 +248,8 @@ _eom_set_output_info_size(eom_output_info *output_info,
 	output_info->width = w;
 	output_info->height = h;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_set_output_info_phy_size(eom_output_info *output_info,
 		int w_mm, int h_mm)
@@ -254,7 +259,8 @@ _eom_set_output_info_phy_size(eom_output_info *output_info,
 	output_info->mm_width = w_mm;
 	output_info->mm_height = h_mm;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_reset_output_info(eom_output_info *output_info)
 {
@@ -266,7 +272,8 @@ _eom_reset_output_info(eom_output_info *output_info)
 	output_info->mm_width = 0;
 	output_info->mm_height = 0;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_output_call_notify_cb(eom_output_notify_s *notify)
 {
@@ -324,7 +331,8 @@ _eom_output_call_notify_cb(eom_output_notify_s *notify)
 		}
 	}
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_output_process_notify_cb(void *data, GArray *array)
 {
@@ -459,23 +467,24 @@ _eom_output_process_notify_cb(void *data, GArray *array)
 exit:
 	_eom_mutex_unlock();
 }
-
-
+/*LCOV_EXCL_STOP*/
 static eom_output_info*
 _eom_find_output_info(eom_output_id output_id)
 {
 	GList *l;
 
 	for (l = output_info_list; l; l = g_list_next(l)) {
+/*LCOV_EXCL_START*/
 		eom_output_info *output_info = (eom_output_info *)l->data;
 
 		if (output_info && (output_id == output_info->id))
 			return output_info;
+/*LCOV_EXCL_STOP*/
 	}
 
 	return NULL;
 }
-
+/*LCOV_EXCL_START*/
 static void
 _eom_free_output_info(eom_output_info **output_info)
 {
@@ -484,7 +493,8 @@ _eom_free_output_info(eom_output_info **output_info)
 		*output_info = NULL;
 	}
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static eom_output_info*
 _eom_alloc_output_info(int output_id, int output_type)
 {
@@ -512,7 +522,7 @@ fail:
 
 	return NULL;
 }
-
+/*LCOV_EXCL_STOP*/
 API int
 eom_init(void)
 {
@@ -550,11 +560,13 @@ eom_deinit(void)
 	/* TODO: redesign the life-cycle of output_infos */
 	/* destory output_info. */
 	for (l = output_info_list; l; l = output_info_list) {
+/*LCOV_EXCL_START*/
 		eom_output_info *output_info = (eom_output_info *)l->data;
 
 		output_info_list = g_list_remove(output_info_list, output_info);
 
 		_eom_free_output_info(&output_info);
+/*LCOV_EXCL_STOP*/
 	}
 
 	_eom_mutex_unlock();
@@ -587,7 +599,7 @@ eom_get_eom_output_ids(int *count)
 		set_last_result(EOM_ERROR_NONE);
 		return NULL;
 	}
-
+/*LCOV_EXCL_START*/
 	if (ret_array->len == 0) {
 		g_array_free(ret_array, FALSE);
 		*count = 0;
@@ -682,6 +694,7 @@ fail:
 	set_last_result(EOM_ERROR_OUT_OF_MEMORY);
 
 	return NULL;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -717,11 +730,12 @@ eom_set_output_added_cb(eom_output_added_cb callback, void *user_data)
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_NONE;
-
+/*LCOV_EXCL_START*/
 fail:
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_OUT_OF_MEMORY;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -787,11 +801,12 @@ eom_set_output_removed_cb(eom_output_removed_cb callback, void *user_data)
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_NONE;
-
+/*LCOV_EXCL_START*/
 fail:
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_OUT_OF_MEMORY;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -857,11 +872,12 @@ eom_set_mode_changed_cb(eom_mode_changed_cb callback, void *user_data)
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_NONE;
-
+/*LCOV_EXCL_START*/
 fail:
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_OUT_OF_MEMORY;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -927,11 +943,12 @@ eom_set_attribute_changed_cb(eom_attribute_changed_cb callback, void *user_data)
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_NONE;
-
+/*LCOV_EXCL_START*/
 fail:
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_OUT_OF_MEMORY;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -986,7 +1003,7 @@ eom_set_output_attribute(eom_output_id output_id,
 		_eom_mutex_unlock();
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
-
+/*LCOV_EXCL_START*/
 	INFO("output_id: %d, attr: %d\n", output_id, attr);
 
 #ifdef HAVE_WAYLAND
@@ -1011,6 +1028,7 @@ eom_set_output_attribute(eom_output_id output_id,
 	_eom_mutex_unlock();
 
 	return (ret) ? EOM_ERROR_NONE : EOM_ERROR_MESSAGE_OPERATION_FAILURE;
+/*LCOV_EXCL_STOP*/
 }
 
 
@@ -1031,12 +1049,14 @@ eom_get_output_type(eom_output_id output_id,
 		set_last_result(EOM_ERROR_NO_SUCH_DEVICE);
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
+/*LCOV_EXCL_START*/
 	*type = output_info->type;
 
 	_eom_mutex_unlock();
 
 	set_last_result(EOM_ERROR_NONE);
 	return EOM_ERROR_NONE;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -1056,12 +1076,14 @@ eom_get_output_mode(eom_output_id output_id,
 		set_last_result(EOM_ERROR_NO_SUCH_DEVICE);
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
+/*LCOV_EXCL_START*/
 	*mode = output_info->output_mode;
 
 	_eom_mutex_unlock();
 
 	set_last_result(EOM_ERROR_NONE);
 	return EOM_ERROR_NONE;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -1081,12 +1103,14 @@ eom_get_output_attribute(eom_output_id output_id,
 		set_last_result(EOM_ERROR_NO_SUCH_DEVICE);
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
+/*LCOV_EXCL_START*/
 	*attribute = output_info->attribute;
 
 	_eom_mutex_unlock();
 
 	set_last_result(EOM_ERROR_NONE);
 	return EOM_ERROR_NONE;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -1106,12 +1130,14 @@ eom_get_output_attribute_state(eom_output_id output_id,
 		set_last_result(EOM_ERROR_NO_SUCH_DEVICE);
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
+/*LCOV_EXCL_START*/
 	*state = output_info->state;
 
 	_eom_mutex_unlock();
 
 	set_last_result(EOM_ERROR_NONE);
 	return EOM_ERROR_NONE;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -1134,7 +1160,7 @@ eom_get_output_resolution(eom_output_id output_id, int *width, int *height)
 		_eom_mutex_unlock();
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
-
+/*LCOV_EXCL_START*/
 	if (width)
 		*width = output_info->width;
 	if (height)
@@ -1143,6 +1169,7 @@ eom_get_output_resolution(eom_output_id output_id, int *width, int *height)
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_NONE;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -1166,7 +1193,7 @@ eom_get_output_physical_size(eom_output_id output_id,
 		set_last_result(EOM_ERROR_NO_SUCH_DEVICE);
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
-
+/*LCOV_EXCL_START*/
 	if (phy_width)
 		*phy_width = output_info->mm_width;
 	if (phy_height)
@@ -1175,6 +1202,7 @@ eom_get_output_physical_size(eom_output_id output_id,
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_NONE;
+/*LCOV_EXCL_STOP*/
 }
 
 API int
@@ -1195,7 +1223,7 @@ eom_set_output_window(eom_output_id output_id, Evas_Object *win)
 		_eom_mutex_unlock();
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
-
+/*LCOV_EXCL_START*/
 	INFO("output_id: %d, evas_win: %p\n", output_id, win);
 
 #ifdef HAVE_WAYLAND
@@ -1221,5 +1249,6 @@ eom_set_output_window(eom_output_id output_id, Evas_Object *win)
 	_eom_mutex_unlock();
 
 	return EOM_ERROR_NONE;
+/*LCOV_EXCL_STOP*/
 }
 

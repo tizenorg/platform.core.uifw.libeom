@@ -92,7 +92,7 @@ typedef struct _EomWaylandOutput {
 
 static EomWaylandClientInfo wl_client_info;
 static int eom_wayland_init;
-
+/*LCOV_EXCL_START*/
 static eom_output_type_e
 _convert_to_eom_output_type(enum wl_eom_type eom_type)
 {
@@ -157,7 +157,8 @@ _convert_to_eom_output_type(enum wl_eom_type eom_type)
 
 	return output_type;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static eom_output_mode_e
 _convert_to_eom_output_mode(enum wl_eom_mode eom_mode)
 {
@@ -180,7 +181,8 @@ _convert_to_eom_output_mode(enum wl_eom_mode eom_mode)
 
 	return output_mode;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static eom_output_attribute_e
 _convert_to_eom_output_attribute(enum wl_eom_attribute eom_attribute)
 {
@@ -206,7 +208,8 @@ _convert_to_eom_output_attribute(enum wl_eom_attribute eom_attribute)
 
 	return output_attribute;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static eom_output_attribute_state_e
 _convert_to_eom_output_attribute_state(
 		enum wl_eom_attribute_state eom_attribute_state)
@@ -234,7 +237,8 @@ _convert_to_eom_output_attribute_state(
 
 	return output_attribute_state;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static enum wl_eom_attribute
 _convert_to_wl_eom_attribute(eom_output_attribute_e attr)
 {
@@ -260,8 +264,8 @@ _convert_to_wl_eom_attribute(eom_output_attribute_e attr)
 
 	return eom_attribute;
 }
-
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_wayland_client_call_notify(EomWaylandOutput *eom_wl_output,
 		eom_output_notify_type_e type)
@@ -348,8 +352,8 @@ _eom_wayland_client_call_notify(EomWaylandOutput *eom_wl_output,
 	if (array)
 		g_array_free(array, FALSE);
 }
-
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static EomWaylandOutput *
 _eom_wayland_client_find_output_from_wl_output(
 		struct wl_list *eom_wl_output_list, int output_id)
@@ -370,7 +374,8 @@ _eom_wayland_client_find_output_from_wl_output(
 
 	return ret;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static EomWaylandOutput *
 _eom_wayland_client_find_output_from_eom_output(
 		struct wl_list *eom_wl_output_list, eom_output_id id)
@@ -391,8 +396,8 @@ _eom_wayland_client_find_output_from_eom_output(
 
 	return ret;
 }
-
-
+/*LCOV_EXCL_STOP*/
+#if 0
 static void
 _eom_wl_output_handle_geometry(void *data,
 			struct wl_output *wl_output,
@@ -426,7 +431,6 @@ _eom_wl_output_handle_geometry(void *data,
 		eom_wl_output->transform = transform;
 
 }
-
 
 static void
 _eom_wl_output_handle_mode(void *data,
@@ -479,7 +483,8 @@ static const struct wl_output_listener eom_wl_output_listener = {
 	_eom_wl_output_handle_done,
 	_eom_wl_output_handle_scale,
 };
-
+#endif
+/*LCOV_EXCL_START*/
 static void
 _eom_wl_eom_output_count(void *data,
 			struct wl_eom *wl_eom,
@@ -497,7 +502,8 @@ _eom_wl_eom_output_count(void *data,
 
 	eom_client_info->num_outputs = count;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_wl_eom_output_info(void *data,
 			struct wl_eom *wl_eom,
@@ -534,7 +540,8 @@ _eom_wl_eom_output_info(void *data,
 
 	wl_list_insert(&eom_client_info->eom_wl_output_list, &eom_wl_output->link);
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_wl_eom_output_type(void *data,
 			struct wl_eom *wl_eom,
@@ -567,7 +574,8 @@ _eom_wl_eom_output_type(void *data,
 				EOM_OUTPUT_NOTIFY_REMOVE);
 	}
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_wl_eom_output_mode(void *data,
 			struct wl_eom *wl_eom,
@@ -591,7 +599,8 @@ _eom_wl_eom_output_mode(void *data,
 			EOM_OUTPUT_NOTIFY_MODE_CHANGED);
 	}
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 static void
 _eom_wl_eom_output_attribute(void *data,
 			 struct wl_eom *wl_eom,
@@ -619,8 +628,7 @@ _eom_wl_eom_output_attribute(void *data,
 			EOM_OUTPUT_NOTIFY_ATTRIBUTE_CHANGED);
 	}
 }
-
-
+/*LCOV_EXCL_STOP*/
 static const struct wl_eom_listener eom_wl_eom_listener = {
 	_eom_wl_eom_output_count,
 	_eom_wl_eom_output_info,
@@ -643,7 +651,7 @@ _eom_wl_registry_handle_global(void *data, struct wl_registry *registry,
 		output = wl_registry_bind(registry, name,
 			&wl_output_interface, 1);
 		if (!output)
-			ERR("Error. fail to bind  %s.\n", interface);
+			ERR("Error. fail to bind  %s.\n", interface);/*LCOV_EXCL_LINE*/
 		else {
 			INFO("bind %s.\n", interface);
 #if 0
@@ -667,9 +675,9 @@ _eom_wl_registry_handle_global(void *data, struct wl_registry *registry,
 	} else if (strcmp(interface, "wl_eom") == 0) {
 		eom = wl_registry_bind(registry, name, &wl_eom_interface, 1);
 		if (!eom)
-			ERR("Error. fail to bind  %s.\n", interface);
+			ERR("Error. fail to bind  %s.\n", interface);/*LCOV_EXCL_LINE*/
 		else {
-			INFO("bind %s.\n", interface);
+			INFO("bind %s.\n", interface);/*LCOV_EXCL_LINE*/
 
 			ci->eom = eom;
 
@@ -679,14 +687,14 @@ _eom_wl_registry_handle_global(void *data, struct wl_registry *registry,
 	} else
 		INFO("Not bind %s.\n", interface);
 }
-
+/*LCOV_EXCL_START*/
 static void
 _eom_wl_registry_handle_global_remove(void *data,
 		struct wl_registry *registry, uint32_t name)
 {
 
 }
-
+/*LCOV_EXCL_STOP*/
 static const struct wl_registry_listener eom_registry_listener = {
 	_eom_wl_registry_handle_global,
 	_eom_wl_registry_handle_global_remove
@@ -745,7 +753,7 @@ _eom_wayland_client_initialize()
 
 	return true;
 fail:
-	return false;
+	return false;/*LCOV_EXCL_LINE*/
 }
 
 static void
@@ -814,7 +822,7 @@ eom_wayland_client_get_output_ids(void)
 		ERR("error. no outputs.\n");
 		return NULL;
 	}
-
+/*LCOV_EXCL_START*/
 	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 
 	wl_list_for_each_safe(eom_wl_output, tmp,
@@ -830,8 +838,9 @@ eom_wayland_client_get_output_ids(void)
 
 	/* returned array will be freed by caller */
 	return array;
+/*LCOV_EXCL_STOP*/
 }
-
+/*LCOV_EXCL_START*/
 GArray *
 eom_wayland_client_get_output_info(eom_output_id output_id)
 {
@@ -896,7 +905,8 @@ eom_wayland_client_get_output_info(eom_output_id output_id)
 	/* returned array will be freed by caller */
 	return array;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 GArray *
 eom_wayland_client_set_attribute(eom_output_id output_id,
 		eom_output_attribute_e attr)
@@ -934,7 +944,8 @@ fail:
 
 	return NULL;
 }
-
+/*LCOV_EXCL_STOP*/
+/*LCOV_EXCL_START*/
 GArray *
 eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 {
@@ -949,7 +960,7 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 	e_wl_win = elm_win_wl_window_get(win);
 	GOTO_IF_FAIL(e_wl_win != NULL, fail);
 
-	eom_wl_output =	_eom_wayland_client_find_output_from_eom_output(
+	eom_wl_output = _eom_wayland_client_find_output_from_eom_output(
 		&wl_client_info.eom_wl_output_list, output_id);
 	GOTO_IF_FAIL(eom_wl_output != NULL, fail);
 
@@ -981,4 +992,5 @@ fail:
 
 	return NULL;
 }
+/*LCOV_EXCL_STOP*/
 

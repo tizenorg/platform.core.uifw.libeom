@@ -34,7 +34,7 @@
       <entry name="dsi" value="16" summary="VGA output connector type"/>
     </enum>
 
-   <enum name="status">
+    <enum name="status">
       <description summary="connection status of the external output">
       ***** TODO ******
       </description>
@@ -43,7 +43,7 @@
       <entry name="disconnection" value="2" summary="output disconnected"/>
     </enum>
 
-   <enum name="mode">
+    <enum name="mode">
       <description summary="mode of the external output">
       ***** TODO ******
       </description>
@@ -52,7 +52,7 @@
       <entry name="presentation" value="2" summary="presentation mode"/>
     </enum>
 
-   <enum name="attribute">
+    <enum name="attribute">
       <description summary="attribute of the external output">
       ***** TODO ******
       </description>
@@ -62,7 +62,7 @@
       <entry name="exclusive" value="3" summary="exclusive attribute"/>
     </enum>
 
-   <enum name="attribute_state">
+    <enum name="attribute_state">
       <description summary="state of the external output attribute">
       ***** TODO ******
       </description>
