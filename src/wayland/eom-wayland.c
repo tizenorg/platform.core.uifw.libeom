@@ -964,6 +964,8 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 		&wl_client_info.eom_wl_output_list, output_id);
 	GOTO_IF_FAIL(eom_wl_output != NULL, fail);
 
+	elm_win_aux_hint_add(win, "wm.policy.win.user.geometry", "1");
+
 	/* set full screen at output */
 	xdg_shell_surface = ecore_wl_window_xdg_surface_get(e_wl_win);
 	if (xdg_shell_surface) {
