@@ -272,6 +272,7 @@ _eom_wayland_client_call_notify(EomWaylandOutput *eom_wl_output,
 {
 	GArray *array = NULL;
 	GValue v = G_VALUE_INIT;
+	int current_pid = getpid();
 
 	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 
@@ -327,7 +328,7 @@ _eom_wayland_client_call_notify(EomWaylandOutput *eom_wl_output,
 
 	/* 8:pid */
 	g_value_init(&v, G_TYPE_INT);
-	g_value_set_int(&v, eom_wl_output->physical_width);
+	g_value_set_int(&v, current_pid);
 	array = g_array_append_val(array, v);
 	g_value_unset(&v);
 
@@ -537,6 +538,7 @@ _eom_wl_eom_output_info(void *data,
 	eom_wl_output->physical_width = w_mm;
 	eom_wl_output->physical_height = h_mm;
 	eom_wl_output->eom_status = connection;
+	eom_wl_output->client_info = &wl_client_info;
 
 	wl_list_insert(&eom_client_info->eom_wl_output_list, &eom_wl_output->link);
 }
@@ -964,7 +966,9 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 		&wl_client_info.eom_wl_output_list, output_id);
 	GOTO_IF_FAIL(eom_wl_output != NULL, fail);
 
+#if 0
 	elm_win_aux_hint_add(win, "wm.policy.win.user.geometry", "1");
+#endif
 
 	/* set full screen at output */
 	xdg_shell_surface = ecore_wl_window_xdg_surface_get(e_wl_win);

@@ -995,12 +995,9 @@ eom_set_output_attribute(eom_output_id output_id,
 	RETV_IF_FAIL(attr < EOM_OUTPUT_ATTRIBUTE_MAX,
 		EOM_ERROR_INVALID_PARAMETER);
 
-	_eom_mutex_lock();
-
 	output_info = _eom_find_output_info(output_id);
 	if (!output_info) {
 		set_last_result(EOM_ERROR_NO_SUCH_DEVICE);
-		_eom_mutex_unlock();
 		return EOM_ERROR_NO_SUCH_DEVICE;
 	}
 /*LCOV_EXCL_START*/
@@ -1012,7 +1009,6 @@ eom_set_output_attribute(eom_output_id output_id,
 	ret_array = eom_dbus_client_set_attribute(output_id, attr);
 #endif
 	if (!ret_array) {
-		_eom_mutex_unlock();
 		return EOM_ERROR_MESSAGE_SENDING_FAILURE;
 	}
 
@@ -1024,8 +1020,6 @@ eom_set_output_attribute(eom_output_id output_id,
 
 	if (ret)
 		_eom_set_output_attribute(output_info, attr);
-
-	_eom_mutex_unlock();
 
 	return (ret) ? EOM_ERROR_NONE : EOM_ERROR_MESSAGE_OPERATION_FAILURE;
 /*LCOV_EXCL_STOP*/
