@@ -1007,7 +1007,9 @@ eom_set_output_attribute(eom_output_id output_id,
 	INFO("output_id: %d, attr: %d\n", output_id, attr);
 
 #ifdef HAVE_WAYLAND
+	_eom_mutex_unlock();
 	ret_array = eom_wayland_client_set_attribute(output_id, attr);
+	_eom_mutex_lock();
 #else
 	ret_array = eom_dbus_client_set_attribute(output_id, attr);
 #endif
