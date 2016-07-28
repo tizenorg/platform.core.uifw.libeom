@@ -83,6 +83,7 @@ typedef struct _EomWaylandOutput {
 	enum wl_eom_mode eom_mode;
 	enum wl_eom_attribute eom_attribute;
 	enum wl_eom_attribute_state eom_attribute_state;
+	enum wl_eom_error error;
 
 	/* client info */
 	EomWaylandClientInfo *client_info;
@@ -539,6 +540,7 @@ _eom_wl_eom_output_info(void *data,
 	eom_wl_output->physical_height = h_mm;
 	eom_wl_output->eom_status = connection;
 	eom_wl_output->client_info = &wl_client_info;
+	eom_wl_output->error = WL_EOM_ERROR_NONE;
 
 	wl_list_insert(&eom_client_info->eom_wl_output_list, &eom_wl_output->link);
 }
@@ -629,7 +631,28 @@ _eom_wl_eom_output_attribute(void *data,
 		_eom_wayland_client_call_notify(eom_wl_output,
 			EOM_OUTPUT_NOTIFY_ATTRIBUTE_CHANGED);
 	}
+
+	eom_wl_output->error = error;
 }
+
+static void
+_eom_wl_eom_output_set_window(void *data,
+			 struct wl_eom *wl_eom,
+			 uint32_t output_id,
+			 uint32_t error)
+{
+	EomWaylandClientInfo *eom_client_info = (EomWaylandClientInfo *)data;
+	EomWaylandOutput *eom_wl_output = NULL;
+
+	INFO("SET_WINODW - id : %d, error : %d\n", output_id, error);
+
+	eom_wl_output = _eom_wayland_client_find_output_from_wl_output(
+		&eom_client_info->eom_wl_output_list, output_id);
+	RET_IF_FAIL(eom_wl_output != NULL);
+
+	eom_wl_output->error = error;
+}
+
 /*LCOV_EXCL_STOP*/
 static const struct wl_eom_listener eom_wl_eom_listener = {
 	_eom_wl_eom_output_count,
@@ -637,6 +660,7 @@ static const struct wl_eom_listener eom_wl_eom_listener = {
 	_eom_wl_eom_output_type,
 	_eom_wl_eom_output_mode,
 	_eom_wl_eom_output_attribute,
+	_eom_wl_eom_output_set_window,
 };
 
 
@@ -932,7 +956,8 @@ eom_wayland_client_set_attribute(eom_output_id output_id,
 	wl_display_dispatch(wl_client_info.display);
 	wl_display_roundtrip(wl_client_info.display);
 
-	ret = 1;
+	if (eom_wl_output->error == WL_EOM_ERROR_NONE)
+		ret = 1;
 
 	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 	g_value_init(&v, G_TYPE_INT);
@@ -984,7 +1009,15 @@ eom_wayland_client_set_window(eom_output_id output_id, Evas_Object *win)
 		}
 	}
 
-	ret = 1;
+	/* TODO:
+	  * wait for the result of set_window.
+	  * this should be the blocking call.
+	  */
+	wl_display_dispatch(wl_client_info.display);
+	wl_display_roundtrip(wl_client_info.display);
+
+	if (eom_wl_output->error == WL_EOM_ERROR_NONE)
+		ret = 1;
 
 	array = g_array_new(FALSE, FALSE, sizeof(GValue));
 	g_value_init(&v, G_TYPE_INT);
